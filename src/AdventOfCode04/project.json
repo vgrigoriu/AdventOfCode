@@ -1,0 +1,23 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "AdventOfCode04 Console Application",
+  "authors": [ "victor" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+  },
+
+  "commands": {
+    "AdventOfCode04": "AdventOfCode04"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+  }
+}
