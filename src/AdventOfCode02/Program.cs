@@ -1012,6 +1012,7 @@ namespace AdventOfCode02
             var boxes = lines.Select(line => new Box(line));
 
             Console.WriteLine(boxes.Sum(box => box.Surface));
+            Console.WriteLine(boxes.Sum(box => box.RibbonLength));
         }
     }
 
@@ -1024,6 +1025,8 @@ namespace AdventOfCode02
         private readonly int max;
 
         public int Surface => 3 * min * med + 2 * min * max + 2 * med * max;
+
+        public int RibbonLength => 2 * (min + med) + min * med * max;
 
         public Box(string dimensions)
         {
