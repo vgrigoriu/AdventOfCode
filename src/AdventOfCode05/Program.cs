@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace AdventOfCode05
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            var input = @"rthkunfaakmwmush
+            const string input = @"rthkunfaakmwmush
 qxlnvjguikqcyfzt
 sleaoasjspnjctqt
 lactpmehuhmzwfjl
@@ -1012,6 +1010,7 @@ otmgvsykuuxrluky
 oiuroieurpyejuvm";
             var lines = input.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
+            Console.WriteLine(lines.Count(s => s.IsNice()));
             Console.WriteLine(lines.Count(s => s.IsNice2()));
         }
     }
@@ -1025,20 +1024,20 @@ oiuroieurpyejuvm";
                 && s.HasNoForbiddenString();
         }
 
-        public static bool HasAtLeastThreeVowels(this string s)
+        private static bool HasAtLeastThreeVowels(this string s)
         {
             var vowels = "aeiou";
 
-            return s.Where(c => vowels.Contains(c)).Count() >= 3;
+            return s.Count(c => vowels.Contains(c)) >= 3;
         }
 
-        public static bool HasDoubleLetter(this string s)
+        private static bool HasDoubleLetter(this string s)
         {
-            return s.Zip(s.Skip(1), (c1, c2) => Tuple.Create(c1, c2))
+            return s.Zip(s.Skip(1), Tuple.Create)
                 .Any(cc => cc.Item1 == cc.Item2);
         }
 
-        public static bool HasNoForbiddenString(this string s)
+        private static bool HasNoForbiddenString(this string s)
         {
             return !s.Contains("ab")
                 && !s.Contains("cd")
@@ -1046,14 +1045,14 @@ oiuroieurpyejuvm";
                 && !s.Contains("xy");
         }
 
-        public static bool HasRepeatingPair(this string s)
+        private static bool HasRepeatingPair(this string s)
         {
             var regex = new Regex(@"(..).*\1");
 
             return regex.IsMatch(s);
         }
 
-        public static bool HasLetterXLetter(this string s)
+        private static bool HasLetterXLetter(this string s)
         {
             var regex = new Regex(@"(.).\1");
 
