@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AdventOfCode05
@@ -1011,7 +1012,7 @@ otmgvsykuuxrluky
 oiuroieurpyejuvm";
             var lines = input.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
-            Console.WriteLine(lines.Count(s => s.IsNice()));
+            Console.WriteLine(lines.Count(s => s.IsNice2()));
         }
     }
 
@@ -1043,6 +1044,26 @@ oiuroieurpyejuvm";
                 && !s.Contains("cd")
                 && !s.Contains("pq")
                 && !s.Contains("xy");
+        }
+
+        public static bool HasRepeatingPair(this string s)
+        {
+            var regex = new Regex(@"(..).*\1");
+
+            return regex.IsMatch(s);
+        }
+
+        public static bool HasLetterXLetter(this string s)
+        {
+            var regex = new Regex(@"(.).\1");
+
+            return regex.IsMatch(s);
+        }
+
+        public static bool IsNice2(this string s)
+        {
+            return s.HasRepeatingPair()
+                && s.HasLetterXLetter();
         }
     }
 }
