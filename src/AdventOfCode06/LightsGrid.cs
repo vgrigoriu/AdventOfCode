@@ -34,7 +34,7 @@ namespace AdventOfCode06
             {
                 for (var column = startColumn; column <= stopColumn; column++)
                 {
-                    lights[line][column] = 1;
+                    lights[line][column] += 1;
                 }
             }
         }
@@ -47,7 +47,10 @@ namespace AdventOfCode06
             {
                 for (var column = startColumn; column <= stopColumn; column++)
                 {
-                    lights[line][column] = 0;
+                    if (lights[line][column] > 0)
+                    {
+                        lights[line][column] -= 1;
+                    }
                 }
             }
         }
@@ -60,7 +63,7 @@ namespace AdventOfCode06
             {
                 for (var column = startColumn; column <= stopColumn; column++)
                 {
-                    lights[line][column] = (lights[line][column] + 1)%2;
+                    lights[line][column] += 2;
                 }
             }
         }
