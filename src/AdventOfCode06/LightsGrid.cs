@@ -21,6 +21,11 @@ namespace AdventOfCode06
             }
         }
 
+        public int HowManyLightsAreLit()
+        {
+            return lights.Sum(line => line.Sum());
+        }
+
         public void TurnOn(int startLine, int stopLine, int startColumn, int stopColumn)
         {
             ValidateParams(startLine, stopLine, startColumn, stopColumn);
