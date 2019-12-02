@@ -47,9 +47,18 @@ void run(int * program) {
 }
 
 int main() {
-    int *program = program_copy();
-    restore(program, 12, 2);
-    run(program);
-    printf("After execution, program[0] is %d\n", program[0]);
-    free(program);
+    int noun, verb;
+    for (noun = 0; noun < 100; noun++) {
+        for (verb = 0; verb < 100; verb++) {
+            int *program = program_copy();
+            restore(program, noun, verb);
+            run(program);
+            printf("After execution, program[0] is %d\n", program[0]);
+            if (program[0] == 19690720) {
+                printf("Solution is: %d\n", 100 * noun + verb);
+                exit(0);
+            }
+            free(program);
+        }
+    }
 }
