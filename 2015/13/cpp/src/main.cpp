@@ -13,7 +13,8 @@ namespace {
         Eric,
         Frank,
         George,
-        Mallory
+        Mallory,
+        Me
     };
 
     int total_happiness(std::vector<People> people, std::array<std::array<int, 8>, 8> happiness) {
@@ -21,8 +22,11 @@ namespace {
         for (int i = 0; i < people.size(); ++i) {
             People p = people[i];
             People next_p = people[(i + 1) % people.size()];
-            result += happiness[p][next_p];
-            result += happiness[next_p][p];
+
+            if (p != Me && next_p != Me) {
+                result += happiness[p][next_p];
+                result += happiness[next_p][p];
+            }
         }
 
         return result;
@@ -89,7 +93,7 @@ int main() {
     happiness[Mallory][Frank] = -73;
     happiness[Mallory][George] = -89;
 
-    std::vector<People> people{Alice, Bob, Carol, David, Eric, Frank, George, Mallory};
+    std::vector<People> people{Alice, Bob, Carol, David, Eric, Frank, George, Mallory, Me};
 
     int max = std::numeric_limits<int>::min();
 
