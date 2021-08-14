@@ -12,7 +12,8 @@ namespace advent_of_code {
         int fly_time;
         int rest_time;
 
-
+public:
+        int distance_after (int seconds) const;
 
         friend auto operator<<(std::ostream& os, const Reindeer& dt) ->std::ostream&;
         friend auto operator>>(std::istream& os, Reindeer& dt) ->std::istream&;

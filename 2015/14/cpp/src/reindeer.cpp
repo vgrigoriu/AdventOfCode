@@ -1,6 +1,17 @@
+#include <algorithm>
+
 #include "reindeer.h"
 
 namespace advent_of_code {
+
+int Reindeer::distance_after(int seconds) const {
+    auto interval = this->fly_time + this->rest_time;
+
+    auto distance = (seconds / interval) * this->fly_time * this->speed;
+    distance += std::min(this->fly_time, seconds % interval) * this->speed;
+
+    return distance;
+}
 
 std::ostream& operator<<(std::ostream& os, const Reindeer& r)
 {

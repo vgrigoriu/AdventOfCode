@@ -13,4 +13,5 @@ After one second, Comet has gone 14 km, while Dancer has gone 16 km. After ten s
 
 In this example, after the 1000th second, both reindeer are resting, and Comet is in the lead at 1120 km (poor Dancer has only gotten 1056 km by that point). So, in this situation, Comet would win (if the race ended at 1000 seconds).
 
-Given the descriptions of each reindeer (in your puzzle input), after exactly 2503 seconds, what distance has the winning reindeer traveled?
+Given the descriptions of each reindeer (in your puzzle input), after exactly
+2503 seconds, what distance has the winning reindeer traveled?
