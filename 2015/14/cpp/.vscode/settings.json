@@ -1,1 +1,7 @@
-{}
+{
+    "files.associations": {
+        "*.raku": "perl6",
+        "vector": "cpp",
+        "algorithm": "cpp"
+    }
+}
