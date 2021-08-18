@@ -27,4 +27,6 @@ public:
 
 std::vector<Ingredient> get_ingredients();
 
+int compute_score(std::vector<Ingredient> const ingredients, int i1, int i2, int i3, int i4);
+
 } // namespace advent_of_code
