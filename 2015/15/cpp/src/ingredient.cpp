@@ -37,4 +37,11 @@ int compute_score(std::vector<Ingredient> const ingredients, int i1, int i2, int
     return capacity * durability * flavor * texture;
 }
 
+int compute_calories(std::vector<Ingredient> const ingredients, int i1, int i2, int i3, int i4) {
+    return i1 * ingredients[0].calories()
+         + i2 * ingredients[1].calories()
+         + i3 * ingredients[2].calories()
+         + i4 * ingredients[3].calories();
+}
+
 }
