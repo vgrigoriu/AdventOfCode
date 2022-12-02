@@ -1,3 +1,3 @@
 @main def hello: Unit = 
-  println(CalorieCounting.solve())
-  println(CalorieCounting2.solve())
+  println(RockPaperScissors.solve())
+  println(RockPaperScissors2.solve())
