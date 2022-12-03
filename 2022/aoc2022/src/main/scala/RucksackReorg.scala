@@ -14,11 +14,7 @@ object RucksackReorg extends Puzzle:
     val commonElements = rucksacksWithCompartmentsAsSets.map { case (c1, c2) =>
       (c1 intersect c2).head
     }
-    val priorities = commonElements.map { c =>
-      if 'a' <= c && c <= 'z' then c - 'a' + 1
-      else if 'A' <= c && c <= 'Z' then c - 'A' + 27
-      else 0
-    }
+    val priorities = commonElements.map(priority)
 
     priorities.sum
 
@@ -30,10 +26,11 @@ object RucksackReorg2 extends Puzzle:
     val badges = elfGroups.map(elfGroup =>
       elfGroup.reduce((e1, e2) => e1 intersect e2).head
     )
-    val priorities = badges.map { c =>
-      if 'a' <= c && c <= 'z' then c - 'a' + 1
-      else if 'A' <= c && c <= 'Z' then c - 'A' + 27
-      else 0
-    }
+    val priorities = badges.map(priority)
 
     priorities.sum
+
+def priority(c: Char): Int =
+  if 'a' <= c && c <= 'z' then c - 'a' + 1
+  else if 'A' <= c && c <= 'Z' then c - 'A' + 27
+  else 0
