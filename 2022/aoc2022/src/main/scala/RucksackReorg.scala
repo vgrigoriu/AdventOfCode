@@ -30,7 +30,7 @@ object RucksackReorg2 extends Puzzle:
 
     priorities.sum
 
-def priority(c: Char): Int =
+private def priority(c: Char): Int =
   if 'a' <= c && c <= 'z' then c - 'a' + 1
   else if 'A' <= c && c <= 'Z' then c - 'A' + 27
   else 0
