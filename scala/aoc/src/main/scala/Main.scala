@@ -1,3 +1,3 @@
 @main def hello: Unit = 
-  println(RucksackReorg.solve())
-  println(RucksackReorg2.solve())
+  println(AuntSue.solve())
+  println(AuntSue2.solve())
