@@ -1,3 +1,3 @@
 @main def hello: Unit = 
-  println(RockPaperScissors.solve())
-  println(RockPaperScissors2.solve())
+  println(RucksackReorg.solve())
+  println(RucksackReorg2.solve())
