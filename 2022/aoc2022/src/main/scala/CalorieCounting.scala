@@ -1,4 +1,4 @@
-trait CalorieCountingBase extends Puzzle, Input:
+trait CalorieCountingBase extends Puzzle:
     protected  class Calories(valuesAsStrings: Seq[String]):
         val values = valuesAsStrings.map(_.toInt)
         val total = values.sum

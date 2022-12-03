@@ -1,4 +1,4 @@
-object RucksackReorg extends Puzzle, Input:
+object RucksackReorg extends Puzzle:
   def solve(): Int =
     val input = readInput()
     val rucksacksWithCompartments = input.map(rucksack => {
@@ -22,7 +22,7 @@ object RucksackReorg extends Puzzle, Input:
 
     priorities.sum
 
-object RucksackReorg2 extends Puzzle, Input:
+object RucksackReorg2 extends Puzzle:
   def solve(): Int =
     val input = readInput()
     val rucksacksAsSets = input.map(_.toSet)

@@ -1,4 +1,4 @@
-object RockPaperScissors extends Puzzle, Input:
+object RockPaperScissors extends Puzzle:
     def solve(): Int =
         val input = readInput()
         input.map(scoreForRound).sum
@@ -21,7 +21,7 @@ object RockPaperScissors extends Puzzle, Input:
             case "B Z" => 3 + 6
             case "C Z" => 3 + 3
 
-object RockPaperScissors2 extends Puzzle, Input:
+object RockPaperScissors2 extends Puzzle:
     def solve(): Int =
         val input = readInput()
         input.map(scoreForRound).sum
