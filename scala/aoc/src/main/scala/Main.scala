@@ -1,3 +1,3 @@
 @main def hello: Unit = 
-  println(AuntSue.solve())
-  println(AuntSue2.solve())
+  println(CampCleanup.solve())
+  println(CampCleanup2.solve())
