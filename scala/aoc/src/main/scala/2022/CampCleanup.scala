@@ -14,11 +14,9 @@ object CampCleanup2 extends Puzzle:
 
 case class Assignments(val first: Range, val second: Range):
   def oneContainsTheOther: Boolean =
-    (first.contains(second.start) && first.contains(second.end))
-      || (second.contains(first.start) && second.contains(first.end))
+    first.fullyContains(second) || second.fullyContains(first)
   def overlaps: Boolean =
-    (first.contains(second.start) || first.contains(second.end))
-      || (second.contains(first.start) || second.contains(first.end))
+    first.overlaps(second)
 
 object Assignments:
   // 28-47,45-47

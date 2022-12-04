@@ -14,3 +14,10 @@ extension[T](list: Seq[T])
         all.addOne(current.toSeq)
         
         all.toSeq
+
+extension(range: Range)
+    def fullyContains(otherRange: Range): Boolean =
+        range.contains(otherRange.start) && range.contains(otherRange.end)
+    
+    def overlaps(otherRange: Range): Boolean =
+        range.contains(otherRange.start) || range.contains(otherRange.end) || otherRange.contains(range.start)
