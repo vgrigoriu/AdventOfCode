@@ -1,18 +1,30 @@
 import scala.collection.mutable.Stack
 
 private trait SupplyStacksBase:
+
     protected def getStacks(stacksInput: Seq[String]): Seq[Stack[Char]] =
-        Seq(
-          Stack("HRBDZFLS": _*),
-          Stack("TMBZR": _*),
-          Stack("ZLCHNS": _*),
-          Stack("SCFJ": _*),
-          Stack("PGHWRZB": _*),
-          Stack("VJZGDNMT": _*),
-          Stack("GLNWFSPQ": _*),
-          Stack("MZR": _*),
-          Stack("MCLGVRT": _*),
-        ).map(_.reverse)
+        // [S]                 [T] [Q]
+        // [L]             [B] [M] [P]     [T]
+        // [F]     [S]     [Z] [N] [S]     [R]
+        // [Z] [R] [N]     [R] [D] [F]     [V]
+        // [D] [Z] [H] [J] [W] [G] [W]     [G]
+        // [B] [M] [C] [F] [H] [Z] [N] [R] [L]
+        // [R] [B] [L] [C] [G] [J] [L] [Z] [C]
+        // [H] [T] [Z] [S] [P] [V] [G] [M] [M]
+        //  1   2   3   4   5   6   7   8   9
+        val maxLength = stacksInput.map(_.length).max
+
+        stacksInput
+            // lose last row
+            .dropRight(1)
+            // pad so they're all the same length
+            .map(_.padTo(maxLength, ' '))
+            .transpose
+            // get only the rows containing letters
+            .slice(Range(1, 100, 4))
+            // remove spaces
+            .map(_.filter(_ != ' '))
+            .map(Stack(_: _*))
 
     protected def getMoves(movesInput: Seq[String]): Seq[Move] =
         movesInput.map(Move.apply)
