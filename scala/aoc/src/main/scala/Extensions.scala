@@ -4,13 +4,13 @@ extension [T](seq: Seq[T])
     def splitBy(pred: T => Boolean): Seq[Seq[T]] =
         val all     = ArrayBuffer[Seq[T]]()
         var current = ArrayBuffer[T]()
-        for i <- seq do
-            if pred(i) then
-                all.addOne(current.toSeq)
+        for elem <- seq do
+            if pred(elem) then
+                all.append(current.toSeq)
                 current = ArrayBuffer[T]()
-            else current.addOne(i)
+            else current.append(elem)
 
-        all.addOne(current.toSeq)
+        all.append(current.toSeq)
 
         all.toSeq
 
