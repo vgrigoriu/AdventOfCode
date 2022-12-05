@@ -16,12 +16,13 @@ private trait SupplyStacksBase:
 
         stacksInput
             // lose last row
-            .dropRight(1)
+            .init
             // pad so they're all the same length
             .map(_.padTo(maxLength, ' '))
+            // turn it sideways, so each stack is a row
             .transpose
             // get only the rows containing letters
-            .slice(Range(1, 100, 4))
+            .slice(1 to 100 by 4)
             // remove spaces
             .map(_.filter(_ != ' '))
             .map(Stack(_: _*))
@@ -55,7 +56,9 @@ case class Move(howMany: Int, from: Int, to: Int)
 
 object Move:
     def apply(input: String): Move =
+        // move 6 from 1 to 7
         val Array(howMany, from, to) = input.substring(5).split(" [a-z]+ ")
+        // convert indexes to 0-based, so it's easier to use them later
         Move(howMany.toInt, from.toInt - 1, to.toInt - 1)
 
 private def moveOneByOne(move: Move, stacks: Seq[Stack[Char]]): Unit =
