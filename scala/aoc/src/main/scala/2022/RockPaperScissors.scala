@@ -1,8 +1,8 @@
-object RockPaperScissors extends Puzzle:
+object RockPaperScissors extends IntPuzzle:
     def solve(): Int =
         val input = readInput()
         input.map(scoreForRound).sum
-    
+
     private def scoreForRound(round: String): Int =
         // The score for a single round is the score for the shape you selected
         // (1 for Rock, 2 for Paper, and 3 for Scissors) plus the score for the
@@ -21,11 +21,11 @@ object RockPaperScissors extends Puzzle:
             case "B Z" => 3 + 6
             case "C Z" => 3 + 3
 
-object RockPaperScissors2 extends Puzzle:
+object RockPaperScissors2 extends IntPuzzle:
     def solve(): Int =
         val input = readInput()
         input.map(scoreForRound).sum
-    
+
     private def scoreForRound(round: String): Int =
         // The score for a single round is the score for the shape you selected
         // (1 for Rock, 2 for Paper, and 3 for Scissors) plus the score for the

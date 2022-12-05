@@ -1,11 +1,11 @@
-object CampCleanup extends Puzzle:
+object CampCleanup extends IntPuzzle:
     override def solve(): Int =
         val input       = readInput()
         val assignemnts = input.map(Assignments.apply)
 
         assignemnts.filter(_.oneContainsTheOther).length
 
-object CampCleanup2 extends Puzzle:
+object CampCleanup2 extends IntPuzzle:
     override def solve(): Int =
         val input       = readInput()
         val assignemnts = input.map(Assignments.apply)

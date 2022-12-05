@@ -1,3 +1,3 @@
 @main def hello: Unit =
-    println(CampCleanup.solve())
-    println(CampCleanup2.solve())
+    println(SupplyStacks.solve())
+    println(SupplyStacks2.solve())
