@@ -1,3 +1,3 @@
 @main def hello: Unit =
-    println(SupplyStacks.solve())
-    println(SupplyStacks2.solve())
+    println(TuningTrouble.solve())
+    println(TuningTrouble2.solve())
