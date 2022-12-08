@@ -1,12 +1,10 @@
-object TuningTrouble extends IntPuzzle:
-    override def solve(): Int =
-        val input = readInput()(0)
-        findFirstDistinctRun(input, 4)
+object TuningTrouble extends Puzzle[Int]:
+    override def solve(input: Seq[String]): Int =
+        findFirstDistinctRun(input(0), 4)
 
-object TuningTrouble2 extends IntPuzzle:
-    override def solve(): Int =
-        val input = readInput()(0)
-        findFirstDistinctRun(input, 14)
+object TuningTrouble2 extends Puzzle[Int]:
+    override def solve(input: Seq[String]): Int =
+        findFirstDistinctRun(input(0), 14)
 
 private def findFirstDistinctRun(input: String, size: Int): Int =
     (0 until input.length - size).find(i =>

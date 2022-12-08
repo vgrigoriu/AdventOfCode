@@ -1,6 +1,5 @@
-object RockPaperScissors extends IntPuzzle:
-    def solve(): Int =
-        val input = readInput()
+object RockPaperScissors extends Puzzle[Int]:
+    def solve(input: Seq[String]): Int =
         input.map(scoreForRound).sum
 
     private def scoreForRound(round: String): Int =
@@ -21,9 +20,8 @@ object RockPaperScissors extends IntPuzzle:
             case "B Z" => 3 + 6
             case "C Z" => 3 + 3
 
-object RockPaperScissors2 extends IntPuzzle:
-    def solve(): Int =
-        val input = readInput()
+object RockPaperScissors2 extends Puzzle[Int]:
+    def solve(input: Seq[String]): Int =
         input.map(scoreForRound).sum
 
     private def scoreForRound(round: String): Int =

@@ -1,3 +1,5 @@
+import PuzzleRunner.run
+
 @main def hello: Unit =
-    println(TreeHouse.solve())
-    println(TreeHouse2.solve())
+    run(TreeHouse)
+    run(TreeHouse2)

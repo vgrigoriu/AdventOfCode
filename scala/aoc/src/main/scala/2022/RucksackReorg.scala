@@ -1,6 +1,5 @@
-object RucksackReorg extends IntPuzzle:
-    def solve(): Int =
-        val input = readInput()
+object RucksackReorg extends Puzzle[Int]:
+    def solve(input: Seq[String]): Int =
         val rucksacksWithCompartments = input.map { rucksack =>
             val compartmentLength = rucksack.length / 2
             (
@@ -19,9 +18,8 @@ object RucksackReorg extends IntPuzzle:
 
         priorities.sum
 
-object RucksackReorg2 extends IntPuzzle:
-    def solve(): Int =
-        val input           = readInput()
+object RucksackReorg2 extends Puzzle[Int]:
+    def solve(input: Seq[String]): Int =
         val rucksacksAsSets = input.map(_.toSet)
         val elfGroups       = rucksacksAsSets.grouped(3)
         val badges = elfGroups.map(elfGroup =>

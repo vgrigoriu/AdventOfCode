@@ -1,13 +1,11 @@
-object AuntSue extends IntPuzzle:
-    override def solve(): Int =
-        val input         = readInput()
+object AuntSue extends Puzzle[Int]:
+    override def solve(input: Seq[String]): Int =
         val aunts         = input.map(Aunt.apply)
         val matchingAunts = aunts.filter(_.matches(targetReading))
         matchingAunts(0).no
 
-object AuntSue2 extends IntPuzzle:
-    override def solve(): Int =
-        val input         = readInput()
+object AuntSue2 extends Puzzle[Int]:
+    override def solve(input: Seq[String]): Int =
         val aunts         = input.map(Aunt.apply)
         val matchingAunts = aunts.filter(_.matches2(targetReading))
         matchingAunts(0).no

@@ -1,18 +1,17 @@
-trait CalorieCountingBase extends IntPuzzle:
+trait CalorieCountingBase:
     protected class Calories(valuesAsStrings: Seq[String]):
         val values = valuesAsStrings.map(_.toInt)
         val total  = values.sum
 
-    protected def getCaloriesPerElf(): Seq[Calories] =
-        val input  = readInput()
+    protected def getCaloriesPerElf(input: Seq[String]): Seq[Calories] =
         val groups = input.splitBy(_.isEmpty)
 
         groups.map(Calories(_))
 
-object CalorieCounting extends CalorieCountingBase:
-    def solve(): Int =
-        getCaloriesPerElf().map(_.total).max
+object CalorieCounting extends CalorieCountingBase, Puzzle[Int]:
+    def solve(input: Seq[String]): Int =
+        getCaloriesPerElf(input).map(_.total).max
 
-object CalorieCounting2 extends CalorieCountingBase:
-    def solve(): Int =
-        getCaloriesPerElf().map(_.total).sorted.reverse.take(3).sum
+object CalorieCounting2 extends CalorieCountingBase, Puzzle[Int]:
+    def solve(input: Seq[String]): Int =
+        getCaloriesPerElf(input).map(_.total).sorted.reverse.take(3).sum

@@ -1,9 +1,8 @@
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
-object NoSpaceLeft extends IntPuzzle:
-    def solve(): Int =
-        val input = readInput()
+object NoSpaceLeft extends Puzzle[Int]:
+    override def solve(input: Seq[String]): Int =
         val fileSystem = FileSystem(Directory("/", ArrayBuffer(), mutable.Map()), List())
         
         // $ cd /
@@ -33,9 +32,8 @@ object NoSpaceLeft extends IntPuzzle:
         val dirSizes = getAllFoldersWithSize(wholeFs)
         dirSizes.values.filter(_ < sizeLimit).sum
 
-object NoSpaceLeft2 extends IntPuzzle:
-    def solve(): Int =
-        val input = readInput()
+object NoSpaceLeft2 extends Puzzle[Int]:
+    def solve(input: Seq[String]): Int =
         val fileSystem = FileSystem(Directory("/", ArrayBuffer(), mutable.Map()), List())
         
         // $ cd /

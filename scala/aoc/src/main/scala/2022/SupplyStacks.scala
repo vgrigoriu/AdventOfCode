@@ -30,9 +30,8 @@ private trait SupplyStacksBase:
     protected def getMoves(movesInput: Seq[String]): Seq[Move] =
         movesInput.map(Move.apply)
 
-object SupplyStacks extends StringPuzzle, SupplyStacksBase:
-    override def solve(): String =
-        val input                        = readInput()
+object SupplyStacks extends Puzzle[String], SupplyStacksBase:
+    override def solve(input: Seq[String]): String =
         val Seq(stacksInput, movesInput) = input.splitBy(_.isEmpty())
         val stacks                       = getStacks(stacksInput)
         val moves                        = getMoves(movesInput)
@@ -41,9 +40,8 @@ object SupplyStacks extends StringPuzzle, SupplyStacksBase:
 
         stacks.map(_.top).mkString
 
-object SupplyStacks2 extends StringPuzzle, SupplyStacksBase:
-    override def solve(): String =
-        val input                        = readInput()
+object SupplyStacks2 extends Puzzle[String], SupplyStacksBase:
+    override def solve(input: Seq[String]): String =
         val Seq(stacksInput, movesInput) = input.splitBy(_.isEmpty())
         val stacks                       = getStacks(stacksInput)
         val moves                        = getMoves(movesInput)
