@@ -1,3 +1,3 @@
 @main def hello: Unit =
-    println(NoSpaceLeft.solve())
-    println(NoSpaceLeft2.solve())
+    println(TreeHouse.solve())
+    println(TreeHouse2.solve())
