@@ -286,3 +286,5 @@ fabric.properties
 *.class
 *.log
 a.out
+
+.metals
