@@ -1,3 +1,7 @@
+package io.github.vgrigoriu.aoc.year2022.day02
+
+import io.github.vgrigoriu.aoc.Puzzle
+
 object RockPaperScissors extends Puzzle[Int]:
     def solve(input: Seq[String]): Int =
         input.map(scoreForRound).sum

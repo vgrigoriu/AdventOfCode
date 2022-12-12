@@ -1,3 +1,5 @@
+package io.github.vgrigoriu.aoc
+
 import java.nio.file.Files.readAllLines
 import java.nio.file.Paths
 import scala.jdk.CollectionConverters.*

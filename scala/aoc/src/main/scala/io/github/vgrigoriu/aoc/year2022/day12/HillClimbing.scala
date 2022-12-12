@@ -1,4 +1,9 @@
+package io.github.vgrigoriu.aoc.year2022.day12
+
 import scala.collection.mutable
+
+import io.github.vgrigoriu.aoc.Puzzle
+
 trait HillClimbingBase:
     case class Node(row: Int, col: Int)
     given CanEqual[Node, Node] = CanEqual.derived

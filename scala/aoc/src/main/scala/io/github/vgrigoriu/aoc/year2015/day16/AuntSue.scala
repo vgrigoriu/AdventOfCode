@@ -1,3 +1,7 @@
+package io.github.vgrigoriu.aoc.year2015.day16
+
+import io.github.vgrigoriu.aoc.Puzzle
+
 object AuntSue extends Puzzle[Int]:
     override def solve(input: Seq[String]): Int =
         val aunts         = input.map(Aunt.apply)

@@ -1,3 +1,7 @@
+package io.github.vgrigoriu.aoc.year2022.day08
+
+import io.github.vgrigoriu.aoc.Puzzle
+
 object TreeHouse extends Puzzle[Int]:
     override def solve(input: Seq[String]): Int =
         val forest = toDigitArray(input)

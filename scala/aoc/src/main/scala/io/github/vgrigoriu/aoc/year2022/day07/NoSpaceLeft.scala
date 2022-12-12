@@ -1,5 +1,8 @@
+package io.github.vgrigoriu.aoc.year2022.day07
+
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import io.github.vgrigoriu.aoc.Puzzle
 
 object NoSpaceLeft extends Puzzle[Int]:
     override def solve(input: Seq[String]): Int =

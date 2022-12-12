@@ -1,3 +1,8 @@
+package io.github.vgrigoriu.aoc.year2022.day04
+
+import io.github.vgrigoriu.aoc.Puzzle
+import io.github.vgrigoriu.aoc.*
+
 object CampCleanup extends Puzzle[Int]:
     override def solve(input: Seq[String]): Int =
         val assignemnts = input.map(Assignments.apply)

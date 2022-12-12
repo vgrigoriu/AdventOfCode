@@ -1,4 +1,9 @@
+package io.github.vgrigoriu.aoc.year2022.day05
+
 import scala.collection.mutable.Stack
+
+import io.github.vgrigoriu.aoc.Puzzle
+import io.github.vgrigoriu.aoc.*
 
 private trait SupplyStacksBase:
 

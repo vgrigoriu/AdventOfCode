@@ -1,3 +1,7 @@
+package io.github.vgrigoriu.aoc.year2022.day09
+
+import io.github.vgrigoriu.aoc.Puzzle
+
 object RopeBridge extends Puzzle[Int]:
     override def solve(input: Seq[String]): Int =
         val moves = input.flatMap(parse)

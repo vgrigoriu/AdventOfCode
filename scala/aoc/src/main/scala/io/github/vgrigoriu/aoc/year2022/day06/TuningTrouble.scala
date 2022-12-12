@@ -1,3 +1,7 @@
+package io.github.vgrigoriu.aoc.year2022.day06
+
+import io.github.vgrigoriu.aoc.Puzzle
+
 object TuningTrouble extends Puzzle[Int]:
     override def solve(input: Seq[String]): Int =
         findFirstDistinctRun(input(0), 4)

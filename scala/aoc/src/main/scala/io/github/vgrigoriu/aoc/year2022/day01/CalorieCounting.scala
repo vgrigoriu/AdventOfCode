@@ -1,3 +1,8 @@
+package io.github.vgrigoriu.aoc.year2022.day01
+
+import io.github.vgrigoriu.aoc.Puzzle
+import io.github.vgrigoriu.aoc.*
+
 trait CalorieCountingBase:
     protected class Calories(valuesAsStrings: Seq[String]):
         val values = valuesAsStrings.map(_.toInt)

@@ -1,4 +1,8 @@
+package io.github.vgrigoriu.aoc.year2022.day11
+
 import scala.collection.mutable
+import io.github.vgrigoriu.aoc.Puzzle
+import io.github.vgrigoriu.aoc.*
 
 object MonkeyInTheMiddle extends Puzzle[Long]:
     override def solve(input: Seq[String]): Long =

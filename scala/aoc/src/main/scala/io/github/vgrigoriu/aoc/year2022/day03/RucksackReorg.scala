@@ -1,3 +1,7 @@
+package io.github.vgrigoriu.aoc.year2022.day03
+
+import io.github.vgrigoriu.aoc.Puzzle
+
 object RucksackReorg extends Puzzle[Int]:
     def solve(input: Seq[String]): Int =
         val rucksacksWithCompartments = input.map { rucksack =>

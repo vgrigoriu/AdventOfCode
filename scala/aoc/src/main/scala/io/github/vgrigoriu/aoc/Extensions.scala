@@ -1,3 +1,5 @@
+package io.github.vgrigoriu.aoc
+
 import scala.collection.mutable.ArrayBuffer
 
 extension [T](seq: Seq[T])
