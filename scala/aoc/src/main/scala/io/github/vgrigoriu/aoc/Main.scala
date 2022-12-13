@@ -1,9 +1,9 @@
 package io.github.vgrigoriu.aoc
 
 import PuzzleRunner.run
-import io.github.vgrigoriu.aoc.year2022.day12.HillClimbing
-import io.github.vgrigoriu.aoc.year2022.day12.HillClimbing2
+import io.github.vgrigoriu.aoc.year2022.day13.DistressSignal
+import io.github.vgrigoriu.aoc.year2022.day13.DistressSignal2
 
 @main def hello: Unit =
-    run(HillClimbing)
-    run(HillClimbing2)
+    run(DistressSignal)
+    run(DistressSignal2)
