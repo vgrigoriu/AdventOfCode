@@ -1,4 +1,4 @@
-import HillClimbing.*
+import io.github.vgrigoriu.aoc.year2022.day12.HillClimbing.*
 
 class HillClimbingSuite extends munit.FunSuite:
     test("Can get all neighbors in NW corner") {

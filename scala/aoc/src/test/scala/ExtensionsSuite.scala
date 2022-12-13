@@ -1,3 +1,5 @@
+import io.github.vgrigoriu.aoc.*
+
 class ExtensionsSuite extends munit.FunSuite:
     test("can split list of numbers") {
         val input = List(1, 2, 3, 5, 7, 8, 9)
