@@ -1,8 +1,10 @@
 package io.github.vgrigoriu.aoc.year2022.day14
 
 import io.github.vgrigoriu.aoc.Puzzle
+import scala.annotation.tailrec
 
 case class Coord(x: Int, y: Int)
+given CanEqual[Coord, Coord] = CanEqual.derived
 case class Path(coords: Seq[Coord])
 case class Cave(paths: Seq[Path], sandSource: Coord)
 
@@ -41,11 +43,11 @@ private def draw(c1: Coord, c2: Coord, caveMap: Array[Array[Char]]): Unit =
     if c1.x == c2.x then
         // draw vertical line
         val step = if c1.y < c2.y then 1 else -1
-        (c1.y to c2.y by step).foreach(y => caveMap(y)(c1.x) = '#')
+        (c1.y to c2.y by step).foreach(y => caveMap(y)(c1.x + 1) = '#')
     else if c1.y == c2.y then
         // draw horizontal line
         val step = if c1.x < c2.x then 1 else -1
-        (c1.x to c2.x by step).foreach(x => caveMap(c1.y)(x) = '#')
+        (c1.x to c2.x by step).foreach(x => caveMap(c1.y)(x + 1) = '#')
 
 private def draw(path: Path, caveMap: Array[Array[Char]]): Unit =
     path.coords.sliding(2).foreach { case Seq(c1, c2) => draw(c1, c2, caveMap) }
@@ -53,8 +55,10 @@ private def draw(path: Path, caveMap: Array[Array[Char]]): Unit =
 private def buildCaveMap(cave: Cave): Array[Array[Char]] =
     val (_, bottomRight) = limits(cave)
     //val result = Array.ofDim[Char](bottomRight.x + 1, bottomRight.y + 1)
-    val result = Array.fill(bottomRight.y + 1)(Array.fill(bottomRight.x + 1)('.'))
-    result(cave.sandSource.y)(cave.sandSource.x) = '+'
+    // Add one extra row at the bottom, and two extra columns left and right
+    // to simplify out-of-bounds checking later.
+    val result = Array.fill(bottomRight.y + 2)(Array.fill(bottomRight.x + 3)('.'))
+    result(cave.sandSource.y)(cave.sandSource.x + 1) = '+'
     cave.paths.foreach(path => draw(path, result))
 
     result
@@ -64,6 +68,43 @@ private def printCaveMap(caveMap: Array[Array[Char]]): Unit =
         for c <- row do print(c)
         println
 
+private def findNextSandPosition(caveMap: Array[Array[Char]], sandUnit: Coord): Coord =
+    // Grain is not yet on the last row...
+    assert(sandUnit.y < caveMap.length - 1)
+    // or first column...
+    assert(0 < sandUnit.x)
+    // or last column.
+    assert(sandUnit.x < caveMap(0).length - 1)
+    
+    if caveMap(sandUnit.y + 1)(sandUnit.x) == '.' then
+        // sand unit can go down
+        Coord(sandUnit.x, sandUnit.y + 1)
+    else if caveMap(sandUnit.y + 1)(sandUnit.x - 1) == '.' then
+        // down and to the left
+        Coord(sandUnit.x - 1, sandUnit.y + 1)
+    else if caveMap(sandUnit.y + 1)(sandUnit.x + 1) == '.' then
+        // down and to the right
+        Coord(sandUnit.x + 1, sandUnit.y + 1)
+    else
+        // stay where it is
+        sandUnit
+
+enum SandResult:
+    case Stopped, Falling
+
+@tailrec
+private def dropSand(caveMap: Array[Array[Char]], sandUnit: Coord): SandResult =
+    val nextPos = findNextSandPosition(caveMap, sandUnit)
+    if nextPos == sandUnit then
+        // Sand unit stopped, paint it and return.
+        caveMap(sandUnit.y)(sandUnit.x) = 'o'
+        SandResult.Stopped
+    else if nextPos.x == 0 || nextPos.x == caveMap(0).length - 1 || nextPos.y == caveMap.length - 1 then
+        // Out of bounds, will continue falling.
+        SandResult.Falling
+    else
+        dropSand(caveMap, nextPos)
+
 object Regolith extends Puzzle[Int]:
     override def exampleResult: Option[Int] = Some(24)
 
@@ -72,6 +113,12 @@ object Regolith extends Puzzle[Int]:
         val (topLeft, bottomRight) = limits(originalCave)
         val cave                   = translate(originalCave, topLeft)
         val caveMap                = buildCaveMap(cave)
+
+        dropSand(caveMap, cave.sandSource)
+        dropSand(caveMap, cave.sandSource)
+        dropSand(caveMap, cave.sandSource)
+        dropSand(caveMap, cave.sandSource)
+        dropSand(caveMap, cave.sandSource)
         printCaveMap(caveMap)
 
         cave.paths.length
