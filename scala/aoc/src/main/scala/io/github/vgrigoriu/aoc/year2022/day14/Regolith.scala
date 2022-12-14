@@ -37,28 +37,31 @@ private def translate(path: Path, topLeft: Coord): Path =
     Path(path.coords.map(c => translate(c, topLeft)))
 
 private def translate(cave: Cave, topLeft: Coord): Cave =
-    Cave(cave.paths.map(translate(_, topLeft)), translate(cave.sandSource, topLeft))
+    Cave(
+      cave.paths.map(translate(_, topLeft)),
+      translate(cave.sandSource, topLeft),
+    )
 
 private def draw(c1: Coord, c2: Coord, caveMap: Array[Array[Char]]): Unit =
     if c1.x == c2.x then
         // draw vertical line
         val step = if c1.y < c2.y then 1 else -1
-        (c1.y to c2.y by step).foreach(y => caveMap(y)(c1.x + 1) = '#')
+        (c1.y to c2.y by step).foreach(y => caveMap(y)(c1.x) = '#')
     else if c1.y == c2.y then
         // draw horizontal line
         val step = if c1.x < c2.x then 1 else -1
-        (c1.x to c2.x by step).foreach(x => caveMap(c1.y)(x + 1) = '#')
+        (c1.x to c2.x by step).foreach(x => caveMap(c1.y)(x) = '#')
 
 private def draw(path: Path, caveMap: Array[Array[Char]]): Unit =
     path.coords.sliding(2).foreach { case Seq(c1, c2) => draw(c1, c2, caveMap) }
 
 private def buildCaveMap(cave: Cave): Array[Array[Char]] =
     val (_, bottomRight) = limits(cave)
-    //val result = Array.ofDim[Char](bottomRight.x + 1, bottomRight.y + 1)
-    // Add one extra row at the bottom, and two extra columns left and right
+    // Add one extra row at the bottom and one extra column to the right
     // to simplify out-of-bounds checking later.
-    val result = Array.fill(bottomRight.y + 2)(Array.fill(bottomRight.x + 3)('.'))
-    result(cave.sandSource.y)(cave.sandSource.x + 1) = '+'
+    val result =
+        Array.fill(bottomRight.y + 2)(Array.fill(bottomRight.x + 2)('.'))
+    result(cave.sandSource.y)(cave.sandSource.x) = '+'
     cave.paths.foreach(path => draw(path, result))
 
     result
@@ -68,14 +71,17 @@ private def printCaveMap(caveMap: Array[Array[Char]]): Unit =
         for c <- row do print(c)
         println
 
-private def findNextSandPosition(caveMap: Array[Array[Char]], sandUnit: Coord): Coord =
+private def findNextSandPosition(
+    caveMap: Array[Array[Char]],
+    sandUnit: Coord,
+): Coord =
     // Grain is not yet on the last row...
     assert(sandUnit.y < caveMap.length - 1)
     // or first column...
     assert(0 < sandUnit.x)
     // or last column.
     assert(sandUnit.x < caveMap(0).length - 1)
-    
+
     if caveMap(sandUnit.y + 1)(sandUnit.x) == '.' then
         // sand unit can go down
         Coord(sandUnit.x, sandUnit.y + 1)
@@ -90,35 +96,71 @@ private def findNextSandPosition(caveMap: Array[Array[Char]], sandUnit: Coord): 
         sandUnit
 
 enum SandResult:
-    case Stopped, Falling
+    case Stopped, Falling, Blocked
+given CanEqual[SandResult, SandResult] = CanEqual.derived
 
 @tailrec
 private def dropSand(caveMap: Array[Array[Char]], sandUnit: Coord): SandResult =
-    val nextPos = findNextSandPosition(caveMap, sandUnit)
-    if nextPos == sandUnit then
-        // Sand unit stopped, paint it and return.
-        caveMap(sandUnit.y)(sandUnit.x) = 'o'
-        SandResult.Stopped
-    else if nextPos.x == 0 || nextPos.x == caveMap(0).length - 1 || nextPos.y == caveMap.length - 1 then
-        // Out of bounds, will continue falling.
-        SandResult.Falling
+    if caveMap(sandUnit.y)(sandUnit.x) == 'o' then SandResult.Blocked
     else
-        dropSand(caveMap, nextPos)
+        val nextPos = findNextSandPosition(caveMap, sandUnit)
+        if nextPos == sandUnit then
+            // Sand unit stopped, paint it and return.
+            caveMap(sandUnit.y)(sandUnit.x) = 'o'
+            SandResult.Stopped
+        else if nextPos.x == 0
+            || nextPos.x == caveMap(0).length - 1
+            || nextPos.y == caveMap.length - 1
+        then
+            // Out of bounds, will continue falling.
+            SandResult.Falling
+        else dropSand(caveMap, nextPos)
 
 object Regolith extends Puzzle[Int]:
     override def exampleResult: Option[Int] = Some(24)
 
     override def solve(input: Seq[String]): Int =
-        val originalCave           = parse(input)
-        val (topLeft, bottomRight) = limits(originalCave)
-        val cave                   = translate(originalCave, topLeft)
-        val caveMap                = buildCaveMap(cave)
+        val originalCave = parse(input)
+        val (topLeft, _) = limits(originalCave)
+        // Leave one empty column on the left.
+        val newOrigin = Coord(topLeft.x - 1, topLeft.y)
+        val cave      = translate(originalCave, newOrigin)
+        val caveMap   = buildCaveMap(cave)
 
-        dropSand(caveMap, cave.sandSource)
-        dropSand(caveMap, cave.sandSource)
-        dropSand(caveMap, cave.sandSource)
-        dropSand(caveMap, cave.sandSource)
-        dropSand(caveMap, cave.sandSource)
-        printCaveMap(caveMap)
+        val result = (1 to Int.MaxValue)
+            .takeWhile(_ =>
+                dropSand(caveMap, cave.sandSource) == SandResult.Stopped,
+            )
+            .length
 
-        cave.paths.length
+        result
+
+private def addFloor(cave: Cave): Cave =
+    val (_, Coord(_, maxY)) = limits(cave)
+    val height              = maxY + 2
+    val floor = Path(
+      Seq(
+        Coord(500 - height, height),
+        Coord(500 + height, height),
+      ),
+    )
+    cave.copy(paths = cave.paths :+ floor)
+
+object Regolith2 extends Puzzle[Int]:
+    override def exampleResult: Option[Int] = Some(93)
+
+    override def solve(input: Seq[String]): Int =
+        val originalCave = addFloor(parse(input))
+        val (topLeft, _) = limits(originalCave)
+        // Leave one empty column on the left.
+        val newOrigin = Coord(topLeft.x - 1, topLeft.y)
+        val cave      = translate(originalCave, newOrigin)
+        val caveMap   = buildCaveMap(cave)
+
+        val result = (1 to Int.MaxValue)
+            .takeWhile(_ =>
+                dropSand(caveMap, cave.sandSource) == SandResult.Stopped,
+            )
+            .length
+
+        result
