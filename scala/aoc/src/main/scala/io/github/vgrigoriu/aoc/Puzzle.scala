@@ -30,18 +30,18 @@ object PuzzleRunner:
                 )
 
         println(puzzle.solve(readInput(puzzle)))
-        
+
     private def readExampleInput(puzzle: Puzzle[_]): Option[Seq[String]] =
         try
             Some(
-                readAllLines(
-                    Paths.get(s"input/${name(puzzle)}-example.txt"),
-                    ).asScala.toSeq,
-                    )
-                    catch case e: NoSuchFileException => None
-                    
+              readAllLines(
+                Paths.get(s"input/${name(puzzle)}-example.txt"),
+              ).asScala.toSeq,
+            )
+        catch case e: NoSuchFileException => None
+
     private def readInput(puzzle: Puzzle[_]): Seq[String] =
         readAllLines(Paths.get(s"input/${name(puzzle)}.txt")).asScala.toSeq
-                        
+
     private def name(puzzle: Puzzle[_]): String =
         puzzle.getClass.getSimpleName.replaceAll("\\$|\\d", "")
