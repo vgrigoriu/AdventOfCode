@@ -47,6 +47,25 @@ private def getExcludedToOneSide(p: Position, targetY: Int, dist: Int): Int =
     // .-----.
     dist - math.abs(p.y - targetY)
 
+private def getInterval(pair: Pair, row: Int): Option[Range] =
+    val dist = distance(pair)
+    val excludedToOneSide = getExcludedToOneSide(pair.sensor, row, dist)
+    if excludedToOneSide < 0 then
+        None
+    else
+        Some(pair.sensor.x - excludedToOneSide to pair.sensor.x + excludedToOneSide)
+
+private def mergeIntervals(intervals: Seq[Range]): Seq[Range] =
+    val sortedIntervals = intervals.sortBy(_.start)
+    sortedIntervals.tail.foldLeft(Seq(sortedIntervals.head))((list, i) =>
+        if i.end <= list.last.end then
+            list
+        else if list.last.end +1 < i.start then
+            list :+ i
+        else
+            list.init :+ (list.last.start to i.end)
+    )
+
 object BeaconExclusionZone extends Puzzle[Int]:
     override def exampleResult: Option[Int] = Some(26)
 
@@ -54,45 +73,23 @@ object BeaconExclusionZone extends Puzzle[Int]:
         val pairs   = input.map(parse)
         val targetY = getTargetRow(pairs.length)
 
-        val exclusions: mutable.Set[Int] = mutable.Set()
-        for pair <- pairs do
-            val dist = distance(pair)
-            val excludedToOneSide =
-                getExcludedToOneSide(pair.sensor, targetY, dist)
-            if 0 <= excludedToOneSide then
-                exclusions.addAll(
-                  pair.sensor.x - excludedToOneSide to pair.sensor.x + excludedToOneSide,
-                )
+        val intervals = pairs.flatMap(getInterval(_, targetY))
+        val mergedIntervals = mergeIntervals(intervals)
 
-        val beaconsInExclusionZone = pairs
-            .filter { case Pair(_, beacon) =>
-                beacon.y == targetY && exclusions.contains(beacon.x)
-            }
-            .map { case Pair(_, beacon) => beacon }
-            .toSet
-        exclusions.size - beaconsInExclusionZone.size
+        mergedIntervals.map(_.length).sum - pairs.filter(_.beacon.y == targetY).map(_.beacon).toSet.size
 
-private def isTooClose(p: Position, pair: Pair): Boolean =
-    //println(s"Checking $p and $pair: d1 = ${distance(p, pair.sensor)}, d2 = ${distance(pair)}: ${distance(p, pair.sensor) <= distance(pair)}")
-    distance(p, pair.sensor) <= distance(pair)
+object BeaconExclusionZone2 extends Puzzle[Long]:
+    override def exampleResult: Option[Long] = Some(56000011L)
 
-private def isTooClose(p: Position, pairs: Seq[Pair]): Boolean =
-    pairs.view.exists(pair => isTooClose(p, pair))
-
-object BeaconExclusionZone2 extends Puzzle[Int]:
-    override def exampleResult: Option[Int] = Some(56000011)
-
-    override def solve(input: Seq[String]): Int =
+    override def solve(input: Seq[String]): Long =
         val pairs   = input.map(parse)
         val maxCoord = getMaxCoord(pairs.size)
 
-        val allBeacons = pairs.map(p => p.beacon).toSet
-
-        val exclusions: mutable.Set[Position] = mutable.Set()
-        for x <- 0 to maxCoord
-            y <- 0 to maxCoord
-        do
-            if !isTooClose(Position(x, y), pairs) && !allBeacons.contains(Position(x, y)) then
-                println(x * 4000000 + y)
+        var result = 0L
+        for row <- 0 to maxCoord do
+            val intervals = pairs.flatMap(getInterval(_, row))
+            val mergedIntervals = mergeIntervals(intervals)
+            if mergedIntervals.length != 1 then
+                result = (mergedIntervals.head.end + 1L) * 4000000 + row
         
-        exclusions.size
+        result
