@@ -24,8 +24,13 @@ private def parse(s: String): Pair =
 
 private def getTargetRow(sensorCount: Int): Int =
     // Target row is not part of the input, so hardcode it here
-    // based on the number of sensors in hte example and real inputs
+    // based on the number of sensors in the example and real inputs
     if sensorCount == 14 then 10 else 2000000
+
+private def getMaxCoord(sensorCount: Int): Int =
+    // MaxCoord is not part of the input, so hardcode it here
+    // based on the number of sensors in the example and real inputs
+    if sensorCount == 14 then 20 else 4000000
 
 private def distance(p1: Position, p2: Position) =
     math.abs(p1.x - p2.x) + math.abs(p1.y - p2.y)
@@ -66,3 +71,28 @@ object BeaconExclusionZone extends Puzzle[Int]:
             .map { case Pair(_, beacon) => beacon }
             .toSet
         exclusions.size - beaconsInExclusionZone.size
+
+private def isTooClose(p: Position, pair: Pair): Boolean =
+    //println(s"Checking $p and $pair: d1 = ${distance(p, pair.sensor)}, d2 = ${distance(pair)}: ${distance(p, pair.sensor) <= distance(pair)}")
+    distance(p, pair.sensor) <= distance(pair)
+
+private def isTooClose(p: Position, pairs: Seq[Pair]): Boolean =
+    pairs.view.exists(pair => isTooClose(p, pair))
+
+object BeaconExclusionZone2 extends Puzzle[Int]:
+    override def exampleResult: Option[Int] = Some(56000011)
+
+    override def solve(input: Seq[String]): Int =
+        val pairs   = input.map(parse)
+        val maxCoord = getMaxCoord(pairs.size)
+
+        val allBeacons = pairs.map(p => p.beacon).toSet
+
+        val exclusions: mutable.Set[Position] = mutable.Set()
+        for x <- 0 to maxCoord
+            y <- 0 to maxCoord
+        do
+            if !isTooClose(Position(x, y), pairs) && !allBeacons.contains(Position(x, y)) then
+                println(x * 4000000 + y)
+        
+        exclusions.size
