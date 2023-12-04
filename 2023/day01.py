@@ -1,8 +1,4 @@
-def read_input() -> list[str]:
-    # read all the lines
-    with open('input/day01.txt') as f:
-        lines = f.readlines()
-        return lines
+from input import read_input
 
 
 def first_and_last_digit(s: str) -> (int, int):
@@ -15,7 +11,7 @@ def combine_digits(a: int, b: int) -> int:
 
 
 def solve_day_01_part_1() -> int:
-    lines = read_input()
+    lines = read_input(1)
     digits = [first_and_last_digit(line) for line in lines]
     numbers = [combine_digits(a, b) for a, b in digits]
     return sum(numbers)
@@ -44,7 +40,7 @@ def first_and_last_digits_including_words(s: str) -> (int, int):
 
 
 def solve_day_01_part_2() -> int:
-    lines = read_input()
+    lines = read_input(1)
     digits = [first_and_last_digits_including_words(line) for line in lines]
     numbers = [combine_digits(a, b) for a, b in digits]
     return sum(numbers)
