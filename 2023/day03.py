@@ -1,10 +1,12 @@
 import re
+from collections import defaultdict
+
 from input import read_input
 from collections.abc import Iterator
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Number:
     repr: str
     line: int
@@ -12,6 +14,12 @@ class Number:
 
     def end_column(self) -> int:
         return self.begin_column + len(self.repr)
+
+
+@dataclass(frozen=True)
+class Gear:
+    line: int
+    column: int
 
 
 class Schematic:
@@ -35,6 +43,13 @@ class Schematic:
                     return True
         return False
 
+    def find_gears_near(self, number: Number) -> Iterator[Gear]:
+        for line in range(number.line - 1, number.line + 2):
+            for col in range(number.begin_column - 1, number.end_column() + 1):
+                c = self.char_at(line, col)
+                if c == "*":
+                    yield Gear(line, col)
+
     def char_at(self, i: int, j: int) -> str:
         if i < 0 or i >= self.height:
             return "."
@@ -55,7 +70,16 @@ def solve_day_03_part_1():
 
 
 def solve_day_03_part_2():
-    pass
+    input = read_input(3)
+    engine = Schematic(input)
+    numbers = list(engine.numbers())
+    gears_to_numbers = defaultdict(list)
+    for number in numbers:
+        for gear in engine.find_gears_near(number):
+            gears_to_numbers[gear].append(number)
+    real_gears = [gear for gear in gears_to_numbers if len(gears_to_numbers[gear]) == 2]
+    gear_ratios = [int(gears_to_numbers[gear][0].repr) * int(gears_to_numbers[gear][1].repr) for gear in real_gears]
+    return sum(gear_ratios)
 
 
 if __name__ == '__main__':

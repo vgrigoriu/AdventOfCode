@@ -4,14 +4,14 @@ from dataclasses import dataclass
 from input import read_input
 
 
-@dataclass
+@dataclass(frozen=True)
 class Bag:
     red: int
     green: int
     blue: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class Game:
     id: int
     maxRed: int
