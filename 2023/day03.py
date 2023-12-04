@@ -1,9 +1,9 @@
 import re
 from collections import defaultdict
-
-from input import read_input
 from collections.abc import Iterator
 from dataclasses import dataclass
+
+from input import read_input
 
 
 @dataclass(frozen=True)
