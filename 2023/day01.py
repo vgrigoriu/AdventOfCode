@@ -46,7 +46,6 @@ def solve_day_01_part_2() -> int:
     return sum(numbers)
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print(solve_day_01_part_1())
     print(solve_day_01_part_2())
