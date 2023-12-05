@@ -1,17 +1,18 @@
 from input import read_input
 
+day = 42
 
-def solve_part_1(day: int):
+
+def solve_part_1():
     puzzle_input = read_input(day)
     return puzzle_input
 
 
-def solve_part_2(day: int):
+def solve_part_2():
     puzzle_input = read_input(day)
     return puzzle_input
 
 
 if __name__ == '__main__':
-    day = 42
-    print(solve_part_1(day))
-    print(solve_part_2(day))
+    print(solve_part_1())
+    print(solve_part_2())
