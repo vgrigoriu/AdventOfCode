@@ -1,8 +1,8 @@
-from input import read
+from input import read_aoc_input
 
 
 def main():
-    reports = read(2, Report)
+    reports = read_aoc_input(Report)
     safe_reports = [report for report in reports if report.is_safe()]
     dampener_safe_reports = [report for report in reports if report.is_dampener_safe()]
     print(len(safe_reports))
