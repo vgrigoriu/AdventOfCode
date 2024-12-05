@@ -13,4 +13,7 @@ def read_aoc_input[T](line_parser: Callable[[str], T]) -> list[T]:
     caller_filename = inspect.stack()[1].filename
     day = int(caller_filename.split("/")[-1].split(".")[0][3:])
     with open(f"input/{day}{small_suffix}.in") as f:
-        return [line_parser(line) for line in f.readlines()]
+        input = [line_parser(line.strip()) for line in f.readlines()]
+        if len(input) == 1:
+            return input[0]
+        return input
