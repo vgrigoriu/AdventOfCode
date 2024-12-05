@@ -2,7 +2,7 @@ from collections import defaultdict
 from input import read_aoc_input
 
 
-input = read_aoc_input(str)
+input = read_aoc_input()
 
 reading_rules = True
 rules = defaultdict(list)
