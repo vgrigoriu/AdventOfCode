@@ -16,6 +16,7 @@ lat = 0
 long = 0
 dir = Direction()
 
+
 def walk(blocks: int):
     global lat, long
     if str(dir) == "N":
@@ -27,6 +28,7 @@ def walk(blocks: int):
     elif str(dir) == "W":
         long -= blocks
 
+
 for side, blocks in input:
     dir.turn(side)
     walk(blocks)
@@ -36,8 +38,9 @@ print(abs(lat) + abs(long))
 lat = 0
 long = 0
 dir = Direction()
-
 visited = [(0, 0)]
+
+
 def walk_memo(blocks: int) -> bool:
     global lat, long
     d_lat, d_long = 0, 0
@@ -49,13 +52,14 @@ def walk_memo(blocks: int) -> bool:
         d_long = 1
     elif str(dir) == "W":
         d_long = -1
-    
+
     for _ in range(blocks):
         lat += d_lat
         long += d_long
         if (lat, long) in visited:
             return True
         visited.append((lat, long))
+
 
 for side, blocks in input:
     dir.turn(side)
