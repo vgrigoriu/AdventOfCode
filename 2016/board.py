@@ -1,19 +1,18 @@
 class Pos:
-    def __init__(self, row: int, col: int, max_row: int, max_col: int):
+    def __init__(self, row: int, col: int, board: "Board"):
         self.row = row
         self.col = col
 
-        self.max_row = max_row
-        self.max_col = max_col
+        self.board = board
 
     def move(self, direction: str):
-        if direction == "U" and 0 < self.row:
+        if direction == "U" and self.board.is_valid(self.row - 1, self.col):
             self.row -= 1
-        elif direction == "D" and self.row < self.max_row:
+        elif direction == "D" and self.board.is_valid(self.row + 1, self.col):
             self.row += 1
-        elif direction == "L" and 0 < self.col:
+        elif direction == "L" and self.board.is_valid(self.row, self.col - 1):
             self.col -= 1
-        elif direction == "R" and self.col < self.max_col:
+        elif direction == "R" and self.board.is_valid(self.row, self.col + 1):
             self.col += 1
 
 
@@ -23,12 +22,15 @@ class Board:
         self.pos = Pos(
             row_no,
             col_no,
-            len(self.rows) - 1,
-            # Assume all rows are the same length.
-            len(self.rows[0]) - 1)
+            self)
     
     def move(self, direction: str):
         self.pos.move(direction)
     
     def current(self):
         return self.rows[self.pos.row][self.pos.col]
+    
+    def is_valid(self, row: int, col: int):
+        return (
+            0 <= row <= len(self.rows) - 1
+            and 0 <= col <= len(self.rows[row]) - 1)

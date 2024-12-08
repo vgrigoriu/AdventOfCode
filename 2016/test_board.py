@@ -1,8 +1,10 @@
-from board import Pos
+from board import Board, Pos
 
+def build_pos():
+    return Board(["abc", "def", "ghi"], 1, 1).pos
 
 def test_up():
-    pos = Pos(1, 1, 2, 2)
+    pos = build_pos()
     pos.move("U")
 
     assert pos.row == 0
@@ -11,7 +13,7 @@ def test_up():
 
 def test_up_twice():
     """Does not go out of the board."""
-    pos = Pos(1, 1, 2, 2)
+    pos = build_pos()
     pos.move("U")
     pos.move("U")
 
@@ -20,7 +22,7 @@ def test_up_twice():
 
 
 def test_down():
-    pos = Pos(1, 1, 2, 2)
+    pos = build_pos()
     pos.move("D")
 
     assert pos.row == 2
@@ -28,7 +30,7 @@ def test_down():
 
 
 def test_up_down_down():
-    pos = Pos(1, 1, 2, 2)
+    pos = build_pos()
     pos.move("U")
     pos.move("D")
     pos.move("D")
@@ -38,7 +40,7 @@ def test_up_down_down():
 
 
 def test_left():
-    pos = Pos(1, 1, 2, 2)
+    pos = build_pos()
     pos.move("L")
 
     assert pos.row == 1
@@ -46,7 +48,7 @@ def test_left():
 
 
 def test_right():
-    pos = Pos(1, 1, 2, 2)
+    pos = build_pos()
     pos.move("R")
 
     assert pos.row == 1
@@ -54,7 +56,7 @@ def test_right():
 
 
 def test_ULDRR():
-    pos = Pos(1, 1, 2, 2)
+    pos = build_pos()
     for dir in "ULDRR":
         pos.move(dir)
 
