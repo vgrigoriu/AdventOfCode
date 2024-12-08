@@ -18,9 +18,20 @@ def parse_room(line: str) -> Room:
     return Room(name, int(sector_id), checksum)
 
 
+def rotate_letter(ch: str, n: int) -> str:
+    if ch == "-":
+        return " "
+    return chr(ord("a") + ((ord(ch) - ord("a") + n) % (ord("z") + 1 - ord("a"))))
+
+
+def rotate_string(s: str, n: int) -> str:
+    return "".join(rotate_letter(ch, n) for ch in s)
+
+
 rooms = read_aoc_input(parse_room)
 
 part1 = 0
+real_rooms = []
 for room in rooms:
     frequencies = [[chr(i), 0] for i in range(ord("a"), ord("z") + 1)]
     for ch in room.name:
@@ -32,5 +43,12 @@ for room in rooms:
     common_letters = "".join(x[0] for x in frequencies[:5])
     if common_letters == room.checksum:
         part1 += room.sector_id
+        real_rooms.append(room)
 
 print(part1)
+
+for room in real_rooms:
+    real_name = rotate_string(room.name, room.sector_id)
+    if "north" in real_name:
+        print(room.sector_id)
+        break
