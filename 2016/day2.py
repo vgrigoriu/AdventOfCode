@@ -1,7 +1,6 @@
 from board import Board
 from input import read_aoc_input
 
-
 input = read_aoc_input()
 
 board = Board(["123", "456", "789"])

@@ -57,7 +57,7 @@ def test_right():
     assert pos.col == 2
 
 
-def test_ULDRR():
+def test_uldrr():
     pos = build_pos()
     for dir in "ULDRR":
         pos.move(dir)

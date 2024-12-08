@@ -1,6 +1,6 @@
 import inspect
 import sys
-from typing import Callable
+from collections.abc import Callable
 
 
 def read_aoc_input[T](line_parser: Callable[[str], T] = str) -> list[T]:
