@@ -1,10 +1,13 @@
-class Direction:
-    compass = ["N", "E", "S", "W"]
+from typing import ClassVar
 
-    def __init__(self):
+
+class Direction:
+    compass: ClassVar[list[str]] = ["N", "E", "S", "W"]
+
+    def __init__(self) -> None:
         self.index = 0
 
-    def turn(self, direction: str):
+    def turn(self, direction: str) -> None:
         if direction == "R":
             self.index = (self.index + 1) % len(Direction.compass)
         elif direction == "L":

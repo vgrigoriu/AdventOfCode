@@ -2,11 +2,11 @@ from direction import Direction
 from input import read_aoc_input
 
 
-def parse_instruction(instr: str):
+def parse_instruction(instr: str) -> tuple[str, int]:
     return instr[0], int(instr[1:])
 
 
-def parse_instructions(line: str):
+def parse_instructions(line: str) -> list[tuple[str, int]]:
     return [parse_instruction(instr) for instr in line.split(", ")]
 
 
@@ -17,7 +17,7 @@ long = 0
 dir = Direction()
 
 
-def walk(blocks: int):
+def walk(blocks: int) -> None:
     global lat, long
     if dir == "N":
         lat += blocks

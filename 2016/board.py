@@ -1,11 +1,11 @@
 class Pos:
-    def __init__(self, row: int, col: int, board: "Board"):
+    def __init__(self, row: int, col: int, board: "Board") -> None:
         self.row = row
         self.col = col
 
         self.board = board
 
-    def move(self, direction: str):
+    def move(self, direction: str) -> None:
         if direction == "U" and self.board.is_valid(self.row - 1, self.col):
             self.row -= 1
         elif direction == "D" and self.board.is_valid(self.row + 1, self.col):
@@ -17,16 +17,16 @@ class Pos:
 
 
 class Board:
-    def __init__(self, rows: list[list[str]]):
+    def __init__(self, rows: list[list[str]]) -> None:
         self.rows = rows
 
-    def __getitem__(self, pos: Pos):
+    def __getitem__(self, pos: Pos) -> str:
         return self.rows[pos.row][pos.col]
 
     def pos(self, row: int, col: int) -> Pos:
         return Pos(row, col, self)
 
-    def is_valid(self, row: int, col: int):
+    def is_valid(self, row: int, col: int) -> bool:
         return (
             0 <= row <= len(self.rows) - 1
             and 0 <= col <= len(self.rows[row]) - 1

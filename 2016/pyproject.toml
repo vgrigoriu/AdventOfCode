@@ -25,6 +25,12 @@ select = [
     "I",
     # naming
     "N",
-    # commas
-    "COM",
+    # comprehensions
+    "C4",
+    # pytest
+    "PT",
+    # ruff-specific
+    "RUF",
+    # annotations
+    "ANN",
 ]
