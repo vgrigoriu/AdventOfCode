@@ -18,8 +18,8 @@ new_board = Board(
         " 234 ",
         "56789",
         " ABC ",
-        "  D  "
-    ]
+        "  D  ",
+    ],
 )  # fmt: skip
 pos = new_board.pos(2, 0)
 
