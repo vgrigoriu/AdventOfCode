@@ -11,3 +11,20 @@ for line in input:
         board.move(dir)
     print(board.current(), end="")
 print()
+
+new_board = Board(
+    [
+        "  1  ",
+        " 234 ",
+        "56789",
+        " ABC ",
+        "  D  "
+    ],
+    2, 0
+)
+
+for line in input:
+    for dir in line:
+        new_board.move(dir)
+    print(new_board.current(), end="")
+print()

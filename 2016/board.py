@@ -33,4 +33,5 @@ class Board:
     def is_valid(self, row: int, col: int):
         return (
             0 <= row <= len(self.rows) - 1
-            and 0 <= col <= len(self.rows[row]) - 1)
+            and 0 <= col <= len(self.rows[row]) - 1
+            and self.rows[row][col] != " ")
