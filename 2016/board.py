@@ -17,15 +17,14 @@ class Pos:
 
 
 class Board:
-    def __init__(self, rows: list[list[str]], row_no: int, col_no: int):
+    def __init__(self, rows: list[list[str]]):
         self.rows = rows
-        self.pos = Pos(row_no, col_no, self)
 
-    def move(self, direction: str):
-        self.pos.move(direction)
+    def __getitem__(self, pos: Pos):
+        return self.rows[pos.row][pos.col]
 
-    def current(self):
-        return self.rows[self.pos.row][self.pos.col]
+    def pos(self, row: int, col: int) -> Pos:
+        return Pos(row, col, self)
 
     def is_valid(self, row: int, col: int):
         return (

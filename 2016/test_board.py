@@ -2,7 +2,7 @@ from board import Board
 
 
 def build_pos():
-    return Board(["abc", "def", "ghi"], 1, 1).pos
+    return Board(["abc", "def", "ghi"]).pos(1, 1)
 
 
 def test_up():
