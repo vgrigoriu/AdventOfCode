@@ -19,19 +19,17 @@ class Pos:
 class Board:
     def __init__(self, rows: list[list[str]], row_no: int, col_no: int):
         self.rows = rows
-        self.pos = Pos(
-            row_no,
-            col_no,
-            self)
-    
+        self.pos = Pos(row_no, col_no, self)
+
     def move(self, direction: str):
         self.pos.move(direction)
-    
+
     def current(self):
         return self.rows[self.pos.row][self.pos.col]
-    
+
     def is_valid(self, row: int, col: int):
         return (
             0 <= row <= len(self.rows) - 1
             and 0 <= col <= len(self.rows[row]) - 1
-            and self.rows[row][col] != " ")
+            and self.rows[row][col] != " "
+        )

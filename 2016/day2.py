@@ -21,7 +21,7 @@ new_board = Board(
         "  D  "
     ],
     2, 0
-)
+)  # fmt: skip
 
 for line in input:
     for dir in line:

@@ -1,7 +1,9 @@
-from board import Board, Pos
+from board import Board
+
 
 def build_pos():
     return Board(["abc", "def", "ghi"], 1, 1).pos
+
 
 def test_up():
     pos = build_pos()
