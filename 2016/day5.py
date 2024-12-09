@@ -1,10 +1,13 @@
 import hashlib
+
 from input import read_aoc_input
+
 
 def md5(s: str) -> str:
     hash = hashlib.md5()
     hash.update(s.encode("utf-8"))
     return hash.hexdigest()
+
 
 door_id = read_aoc_input()
 
