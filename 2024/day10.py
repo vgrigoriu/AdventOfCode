@@ -1,5 +1,6 @@
 from input import read_aoc_input
 
+
 def find_trails(line: int, col: int) -> int:
     if trails[line][col] != -1:
         return trails[line][col]
@@ -23,10 +24,9 @@ def find_trails(line: int, col: int) -> int:
     # right
     if col < len(data[0]) - 1 and ord(start) + 1 == ord(data[line][col + 1]):
         no_trails += find_trails(line, col + 1)
-    
+
     trails[line][col] = no_trails
     return no_trails
-
 
 
 def score(line: int, col: int):
@@ -34,13 +34,13 @@ def score(line: int, col: int):
         return 0
     return find_trails(line, col)
 
+
 def print_trails():
     pass
 
+
 data = read_aoc_input()
-trails = [
-    [-1 for _ in line] for line in data
-]
+trails = [[-1 for _ in line] for line in data]
 sum_of_scores = 0
 for line in range(len(data)):
     for col in range(len(data[line])):

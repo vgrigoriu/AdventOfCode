@@ -10,6 +10,7 @@ def find_guard(map):
             if map[i][j] == "^":
                 return i, j
 
+
 guard_x, guard_y = find_guard(input)
 guard_direction = "up"
 guard_gone = False
@@ -21,6 +22,7 @@ visited = {(guard_x, guard_y)}
 visited_with_direction = {(guard_x, guard_y, guard_direction)}
 
 in_loop = False
+
 
 def move_guard(map):
     global guard_x, guard_y, guard_direction, guard_gone, in_loop
@@ -83,6 +85,7 @@ def move_guard(map):
             else:
                 guard_direction = "up"
 
+
 def print_map(map):
     for i in range(0, len(map)):
         for j in range(0, len(map[i])):
@@ -109,6 +112,7 @@ while not guard_gone:
 
 print(len(visited))
 
+
 def add_obstacle(map, x, y):
     new_map = []
     for i in range(0, len(map)):
@@ -120,6 +124,7 @@ def add_obstacle(map, x, y):
                 new_map[i] += map[i][j]
 
     return new_map
+
 
 # simulate an obstacle in each possible position
 possible_obstacles = []
