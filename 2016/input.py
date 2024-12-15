@@ -3,7 +3,7 @@ import sys
 from collections.abc import Callable
 
 
-def read_aoc_input[T](line_parser: Callable[[str], T] = lambda x: x) -> T|list[T]:
+def read_aoc_input[T](line_parser: Callable[[str], T] = lambda x: x) -> T | list[T]:
     """
     Reads the input file for the current day and returns a list of parsed lines.
     Assumes that the caller is in a file named dayX.py where X is the day number.
