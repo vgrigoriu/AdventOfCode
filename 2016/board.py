@@ -17,7 +17,7 @@ class Pos:
 
 
 class Board:
-    def __init__(self, rows: list[list[str]]) -> None:
+    def __init__(self, rows: list[str]) -> None:
         self.rows = rows
 
     def __getitem__(self, pos: Pos) -> str:

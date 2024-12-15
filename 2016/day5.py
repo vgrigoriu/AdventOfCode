@@ -9,9 +9,9 @@ def md5(s: str) -> str:
     return hash.hexdigest()
 
 
-door_id = read_aoc_input()
+door_id: str = read_aoc_input()
 
-password = []
+password: list[str] = []
 i = 0
 while len(password) < 8:
     hash = md5(f"{door_id}{i}")

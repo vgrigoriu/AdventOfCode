@@ -59,6 +59,8 @@ def walk_memo(blocks: int) -> bool:
         if (lat, long) in visited:
             return True
         visited.append((lat, long))
+    
+    return False
 
 
 for side, blocks in input:

@@ -13,5 +13,5 @@ class Direction:
         elif direction == "L":
             self.index = (self.index - 1) % len(Direction.compass)
 
-    def __eq__(self, s: str) -> bool:
+    def __eq__(self, s: object) -> bool:
         return Direction.compass[self.index] == s
