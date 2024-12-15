@@ -1,4 +1,4 @@
-from day7 import has_abba, supports_tls
+from day7 import find_all_abas, has_abba, supports_tls
 
 
 def test_has_no_abba() -> None:
@@ -33,3 +33,18 @@ def test_tls_if_abba_after_hypernet() -> None:
 
 def test_tls_with_two_hypernets() -> None:
     assert supports_tls("abcdef[ghijklm]noon[pqrs]tuvw")
+
+def test_all_abas_no_aba() -> None:
+    assert find_all_abas("abcd") == []
+
+def test_find_single_abba() -> None:
+    assert find_all_abas("abcbdef") == [("b", "c")]
+
+def test_aaa_is_not_aba() -> None:
+    assert find_all_abas("abcccdef") == []
+
+def test_multiple_abas() -> None:
+    assert find_all_abas("abacdefeghijiklmn") == [("a", "b"), ("e", "f"), ("i", "j")]
+
+def test_ovelapping_abas() -> None:
+    assert find_all_abas("abab") == [("a", "b"), ("b", "a")]
