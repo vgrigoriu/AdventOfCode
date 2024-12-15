@@ -20,18 +20,14 @@ def find_all_babs(sequence: str) -> list[(str, str)]:
 
 def supports_tls(ip_address: str) -> bool:
     """Must have xyyx sequence, but not inside square brackets"""
-    result = False
 
     sequences = re.split("[\\[\\]]", ip_address)
-    for i, seq in enumerate(sequences):
-        is_hypernet = i % 2 == 1
-        seq_has_abba = has_abba(seq)
-        if is_hypernet and seq_has_abba:
-            return False
-        if seq_has_abba:
-            result = True
+    supernets = sequences[0::2]
+    hypernets = sequences[1::2]
+    supernets_have_abba = any(has_abba(seq) for seq in supernets)
+    hypernets_have_abba = any(has_abba(seq) for seq in hypernets)
 
-    return result
+    return supernets_have_abba and not hypernets_have_abba
 
 
 def supports_ssl(ip_address: str) -> bool:
