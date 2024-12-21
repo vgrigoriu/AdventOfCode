@@ -1,6 +1,5 @@
 import re
 from dataclasses import dataclass, field
-from typing import Optional
 
 from input import read_aoc_input
 
@@ -9,19 +8,23 @@ from input import read_aoc_input
 class BotDestination:
     bot: int
 
+
 @dataclass
 class OutputDestination:
     output: int
 
+
 type Destination = BotDestination | OutputDestination
+
 
 def make_dest(dest_type: str, n: int) -> Destination:
     if dest_type == "bot":
         return BotDestination(n)
     if dest_type == "output":
         return OutputDestination(n)
-    
+
     raise ValueError(f"don't know how to make destination of type {type}")
+
 
 @dataclass
 class BotGives:
@@ -35,14 +38,15 @@ class GoesTo:
     chip: int
     bot: int
 
+
 type Instr = BotGives | GoesTo
 
 gives = re.compile(
     r"bot (\d+) gives low to (bot|output) (\d+) and high to (bot|output) (\d+)"
 )
-goes = re.compile(
-    r"value (\d+) goes to bot (\d+)"
-)
+goes = re.compile(r"value (\d+) goes to bot (\d+)")
+
+
 def parse_instruction(line: str) -> Instr:
     if m := gives.match(line):
         bot = int(m[1])
@@ -61,6 +65,7 @@ def parse_instruction(line: str) -> Instr:
 
 
 instructions = read_aoc_input(parse_instruction)
+
 
 @dataclass
 class Bot:
@@ -85,6 +90,7 @@ class Bot:
 bots = [Bot(no) for no in range(210)]
 # max output number seems to be 20
 outputs = [[] for _ in range(21)]
+
 
 def propagate(bot_no: int) -> None:
     bot = bots[bot_no]
