@@ -14,8 +14,7 @@ class Coord:
 
 class Grid(ABC):
     @abstractmethod
-    def __getitem__(self, coord: Coord) -> Any:
-        ...
+    def __getitem__(self, coord: Coord) -> Any: ...
 
     @abstractmethod
     def __iter__(self) -> Iterable[Iterable[Any]]:
@@ -23,8 +22,7 @@ class Grid(ABC):
         ...
 
     @abstractmethod
-    def is_visitable(self, coord: Coord):
-        ...
+    def is_visitable(self, coord: Coord) -> bool: ...
 
     def shortest_path(self, start: Coord, target: Coord) -> int | None:
         visited = set()
@@ -39,10 +37,10 @@ class Grid(ABC):
             visited.add(coord)
 
             neighbors = [
-                dataclasses.replace(coord, x = coord.x - 1),
-                dataclasses.replace(coord, x = coord.x + 1),
-                dataclasses.replace(coord, y = coord.y - 1),
-                dataclasses.replace(coord, y = coord.y + 1),
+                dataclasses.replace(coord, x=coord.x - 1),
+                dataclasses.replace(coord, x=coord.x + 1),
+                dataclasses.replace(coord, y=coord.y - 1),
+                dataclasses.replace(coord, y=coord.y + 1),
             ]
 
             for neighbor in neighbors:
@@ -69,10 +67,10 @@ class Grid(ABC):
             visited[coord] = distance
 
             neighbors = [
-                dataclasses.replace(coord, x = coord.x - 1),
-                dataclasses.replace(coord, x = coord.x + 1),
-                dataclasses.replace(coord, y = coord.y - 1),
-                dataclasses.replace(coord, y = coord.y + 1),
+                dataclasses.replace(coord, x=coord.x - 1),
+                dataclasses.replace(coord, x=coord.x + 1),
+                dataclasses.replace(coord, y=coord.y - 1),
+                dataclasses.replace(coord, y=coord.y + 1),
             ]
 
             for neighbor in neighbors:
