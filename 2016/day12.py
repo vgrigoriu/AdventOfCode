@@ -1,9 +1,10 @@
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 
 from input import read_aoc_input
 
 type Registry = str
+
 
 @dataclass
 class Cpy:
@@ -13,6 +14,7 @@ class Cpy:
     def __str__(self) -> str:
         return f"cpy {self.src} {self.dest}"
 
+
 @dataclass
 class Inc:
     registry: Registry
@@ -20,12 +22,14 @@ class Inc:
     def __str__(self) -> str:
         return f"inc {self.registry}"
 
+
 @dataclass
 class Dec:
     registry: Registry
 
     def __str__(self) -> str:
         return f"dec {self.registry}"
+
 
 @dataclass
 class Jnz:
@@ -35,7 +39,9 @@ class Jnz:
     def __str__(self) -> str:
         return f"jnz {self.test} {self.jump}"
 
+
 type Instr = Cpy | Inc | Dec | Jnz
+
 
 def parse_instr(line: str) -> Instr:
     if m := re.match(r"cpy ([abcd]|-?\d+) ([abcd])", line):
@@ -44,22 +50,22 @@ def parse_instr(line: str) -> Instr:
         except ValueError:
             src = m[1]
         return Cpy(src, m[2])
-    
-    if m:= re.match(r"inc ([abcd])", line):
+
+    if m := re.match(r"inc ([abcd])", line):
         return Inc(m[1])
-    
-    if m:= re.match(r"dec ([abcd])", line):
+
+    if m := re.match(r"dec ([abcd])", line):
         return Dec(m[1])
 
-    if m:= re.match(r"jnz ([abcd]|-?\d+) (-?\d+)", line):
+    if m := re.match(r"jnz ([abcd]|-?\d+) (-?\d+)", line):
         try:
             test = int(m[1])
         except ValueError:
             test = m[1]
         return Jnz(test, int(m[2]))
 
-
     print(f"not yet parsing {line}")
+
 
 class Computer:
     def __init__(self, instructions: list[Instr], c: int = 0) -> None:
@@ -101,9 +107,8 @@ class Computer:
             case _:
                 raise ValueError(f"don't know to execute {self.instructions[self.ip]}")
 
-
     def is_halted(self) -> bool:
-        return not(0 <= self.ip < len(self.instructions))
+        return not (0 <= self.ip < len(self.instructions))
 
     def __str__(self) -> str:
         result = "a\tb\tc\td\n"
@@ -115,8 +120,9 @@ class Computer:
             else:
                 result += "  "
             result += f"{instr}\n"
-        
+
         return result
+
 
 instructions = read_aoc_input(parse_instr)
 c1 = Computer(instructions)
