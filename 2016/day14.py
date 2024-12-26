@@ -6,6 +6,7 @@ from collections import defaultdict
 def md5hash(salt: str, index: int) -> str:
     return hashlib.md5(f"{salt}{index}".encode()).hexdigest()
 
+
 def md5hash_2016(salt: str, index: int) -> str:
     result = f"{salt}{index}"
     for _ in range(2017):
@@ -13,23 +14,28 @@ def md5hash_2016(salt: str, index: int) -> str:
 
     return result
 
+
 def test_md5hash() -> None:
     assert "888" in md5hash("abc", 18)
     assert "eee" in md5hash("abc", 39)
     assert "eeeee" in md5hash("abc", 816)
+
 
 def test_md5hash_2016() -> None:
     assert "222" in md5hash_2016("abc", 5)
     assert "eee" in md5hash_2016("abc", 10)
     assert "fffff" in md5hash_2016("abc", 22859)
 
+
 def first_triplet(hash: str) -> str | None:
     if m := re.search(r"([a-f0-9])\1\1", hash):
         return m.group(1)
     return None
 
+
 def all_fivers(hash: str) -> list[str]:
     return [m.group(1) for m in re.finditer(r"([a-f0-9])\1\1\1\1", hash)]
+
 
 def test_first_triplet() -> None:
     assert first_triplet(md5hash("abc", 18)) == "8"
@@ -39,6 +45,7 @@ def test_first_triplet() -> None:
     for index in range(18):
         assert first_triplet(md5hash("abc", index)) is None
 
+
 def test_all_fivers() -> None:
     assert all_fivers("") == []
     assert all_fivers("11111") == ["1"]
@@ -47,6 +54,7 @@ def test_all_fivers() -> None:
     assert all_fivers("00000ccccc") == ["0", "c"]
     assert all_fivers("qqqqq") == []
     assert all_fivers("abc22222def333330124444eeeee") == ["2", "3", "e"]
+
 
 salt = "ahsbgdzn"
 
