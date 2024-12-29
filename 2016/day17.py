@@ -56,6 +56,45 @@ class Day17Grid:
         # if we got here, we couldn't find a path
         return None
 
+    def find_longest_path(self) -> str | None:
+        paths = queue.Queue()
+        # start at the beginning
+        paths.put("")
+        longest_path = None
+
+        while not paths.empty():
+            current = paths.get()
+            open_doors = self.open_doors(current)
+            x, y = self.coord(current)
+            for door in open_doors:
+                match door:
+                    case "U" if y > 0:
+                        new_path = current + door
+                        if self.coord(new_path) == self._target:
+                            longest_path = new_path
+                        else:
+                            paths.put(new_path)
+                    case "D" if y < self._size - 1:
+                        new_path = current + door
+                        if self.coord(new_path) == self._target:
+                            longest_path = new_path
+                        else:
+                            paths.put(new_path)
+                    case "L" if x > 0:
+                        new_path = current + door
+                        if self.coord(new_path) == self._target:
+                            longest_path = new_path
+                        else:
+                            paths.put(new_path)
+                    case "R" if x < self._size - 1:
+                        new_path = current + door
+                        if self.coord(new_path) == self._target:
+                            longest_path = new_path
+                        else:
+                            paths.put(new_path)
+
+        return longest_path
+
     def open_doors(self, path: str) -> list[str]:
         hash = hashlib.md5((self._passcode + path).encode()).hexdigest()[:4]
         return [
@@ -107,3 +146,4 @@ def test_find_first_path() -> None:
 
 grid = Day17Grid("bwnlcvfs")
 print(grid.find_first_path())
+print(len(grid.find_longest_path()))
