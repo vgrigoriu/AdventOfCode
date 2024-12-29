@@ -10,16 +10,16 @@ class Coord(typing.NamedTuple):
 
 class Day17Grid:
     def __init__(
-            self,
-            passcode: str,
-            target: Coord = Coord(3, 3),
-            start: Coord = Coord(0, 0),
-            size: int = 4) -> None:
+        self,
+        passcode: str,
+        target: Coord = Coord(3, 3),
+        start: Coord = Coord(0, 0),
+        size: int = 4,
+    ) -> None:
         self._passcode = passcode
         self._target = target
         self._start = start
         self._size = size
-
 
     def find_first_path(self) -> str | None:
         paths = queue.Queue()
@@ -102,7 +102,7 @@ class Day17Grid:
             for direction, ch in zip("UDLR", hash, strict=True)
             if ch in "bcdef"
         ]
-    
+
     def coord(self, path: str) -> Coord:
         result = self._start
         for direction in path:

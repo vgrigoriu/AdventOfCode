@@ -32,17 +32,15 @@ def generate(data: str) -> str:
 
 
 def test_generate() -> None:
-    assert(generate("1")) == "100"
-    assert(generate("0")) == "001"
-    assert(generate("11111")) == "11111000000"
-    assert(generate("111100001010")) == "1111000010100101011110000"
+    assert generate("1") == "100"
+    assert generate("0") == "001"
+    assert generate("11111") == "11111000000"
+    assert generate("111100001010") == "1111000010100101011110000"
 
 
 def checksum_one_step(data: str) -> str:
     return "".join(
-        "1" if b1 == b2 else "0"
-        for b1, b2 in
-        zip(data[::2], data[1::2], strict=True)
+        "1" if b1 == b2 else "0" for b1, b2 in zip(data[::2], data[1::2], strict=True)
     )
 
 
