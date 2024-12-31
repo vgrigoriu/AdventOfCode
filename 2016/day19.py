@@ -1,11 +1,10 @@
 class Node:
-    def __init__(self, value: int, next = None) -> None:
+    def __init__(self, value: int, next=None) -> None:
         self.value = value
         self.next = next
 
-nodes = [
-    Node(i + 1) for i in range(3014387)
-]
+
+nodes = [Node(i + 1) for i in range(3014387)]
 
 for i, node in enumerate(nodes):
     node.next = nodes[(i + 1) % len(nodes)]
@@ -18,9 +17,7 @@ while current_node.next != current_node:
 
 print(current_node.value)
 
-nodes = [
-    Node(i + 1) for i in range(3014387)
-]
+nodes = [Node(i + 1) for i in range(3014387)]
 
 for i, node in enumerate(nodes):
     node.next = nodes[(i + 1) % len(nodes)]
