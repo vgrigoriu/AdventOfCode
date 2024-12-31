@@ -37,10 +37,8 @@ while nodes_left > 1:
     before_victim.next = before_victim.next.next
 
     nodes_left -= 1
-    if nodes_left % 2 == 1:
-        # one step to the next victim, leave cursor where it is
-        pass
-    else:
+    if nodes_left % 2 == 0:
+        # two step to the next victim, need to advance the cursor
         before_victim = before_victim.next
 
 print(before_victim.value)
