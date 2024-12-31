@@ -1,7 +1,7 @@
 class Node:
-    def __init__(self, value: int, next=None) -> None:
+    def __init__(self, value: int) -> None:
         self.value = value
-        self.next = next
+        self.next = None
 
 
 nodes = [Node(i + 1) for i in range(3014387)]

@@ -1,6 +1,5 @@
 import dataclasses
-import functools
-from collections.abc import Iterable
+from collections.abc import Generator, Iterable
 from typing import Any
 
 from grid import Coord, Grid
@@ -12,8 +11,7 @@ class Day13Grid(Grid):
         self._max_x = 0
         self._max_y = 0
 
-    @functools.cache
-    def __getitem__(self, coord: Coord) -> Any:
+    def __getitem__(self, coord: Coord) -> str:
         x, y = dataclasses.astuple(coord)
 
         # Did we go beyond?
@@ -28,7 +26,7 @@ class Day13Grid(Grid):
         else:
             return "#"
 
-    def __iter__(self):
+    def __iter__(self) -> Generator[Iterable[str], Any]:
         for y in range(self._max_y + 1):
             yield self._row_iter(y)
 

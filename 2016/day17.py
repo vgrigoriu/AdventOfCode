@@ -8,16 +8,19 @@ class Coord(typing.NamedTuple):
     y: int
 
 
+origin = Coord(0, 0)
+
+
 class Day17Grid:
     def __init__(
         self,
         passcode: str,
-        target: Coord = Coord(3, 3),
-        start: Coord = Coord(0, 0),
+        target: Coord | None = None,
+        start: Coord = origin,
         size: int = 4,
     ) -> None:
         self._passcode = passcode
-        self._target = target
+        self._target = target if target is not None else Coord(3, 3)
         self._start = start
         self._size = size
 

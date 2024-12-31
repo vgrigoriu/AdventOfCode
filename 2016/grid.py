@@ -14,7 +14,7 @@ class Coord:
 
 class Grid(ABC):
     @abstractmethod
-    def __getitem__(self, coord: Coord) -> Any: ...
+    def __getitem__(self, coord: Coord) -> str: ...
 
     @abstractmethod
     def __iter__(self) -> Iterable[Iterable[Any]]:
