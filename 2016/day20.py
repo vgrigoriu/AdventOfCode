@@ -54,6 +54,7 @@ class Interval:
 
         raise ValueError(f"don't know how to subtract {other_interval} from {self}")
 
+
 def test_interval_difference_disjunct() -> None:
     i1 = Interval(1, 10)
     i2 = Interval(23, 45)
@@ -107,15 +108,15 @@ class Intervals:
     intervals: list[Interval]
 
     def __sub__(self, other_interval: Interval) -> Intervals:
-        return Intervals([
-            interval for i1 in self.intervals
-                     for interval in i1 - other_interval
-        ])
+        return Intervals(
+            [interval for i1 in self.intervals for interval in i1 - other_interval]
+        )
 
 
 def parse_interval(line: str) -> Interval:
     parts = line.split("-")
     return Interval(int(parts[0]), int(parts[1]))
+
 
 input = read_aoc_input(parse_interval)
 
