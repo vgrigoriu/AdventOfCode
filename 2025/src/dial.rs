@@ -1,5 +1,5 @@
 pub struct Dial {
-    point_at: i16,
+    point_at: i32,
     times_at_zero_after_rotation: u32,
     times_at_zero_after_click: u32,
 }
@@ -19,31 +19,28 @@ impl Dial {
         Self::default()
     }
 
+    #[inline]
     pub fn apply(&mut self, rotation: &str) {
-        let direction = rotation.chars().next().expect("Rotation was empty");
-        let distance = rotation[direction.len_utf8()..]
+        let direction = rotation.as_bytes()[0];
+        let distance: i32 = rotation[1..]
             .parse()
             .unwrap_or_else(|_| panic!("Invalid rotation: {}", rotation));
-        let step = match direction {
-            'R' => 1,
-            'L' => -1,
+
+        let distance = match direction {
+            b'R' => distance,
+            b'L' => -distance,
             _ => panic!("Invalid rotation: {}", rotation),
         };
 
-        for _ in 0..distance {
-            self.click(step);
-        }
+        self.point_at += distance;
+
+        let crossings = self.point_at.div_euclid(100).abs() as u32;
+        self.times_at_zero_after_click += crossings;
+
+        self.point_at = self.point_at.rem_euclid(100);
 
         if self.point_at == 0 {
             self.times_at_zero_after_rotation += 1;
-        }
-    }
-
-    fn click(&mut self, n: i16) {
-        self.point_at += n;
-        self.point_at = self.point_at.rem_euclid(100);
-        if self.point_at == 0 {
-            self.times_at_zero_after_click += 1;
         }
     }
 

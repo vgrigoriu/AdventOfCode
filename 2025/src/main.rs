@@ -1,6 +1,4 @@
-use dial::Dial;
-
-mod dial;
+use aoc2025::dial::Dial;
 
 const INPUT: &str = include_str!("../input/day01.in");
 
