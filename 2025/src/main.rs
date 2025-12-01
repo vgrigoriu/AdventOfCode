@@ -1,19 +1,13 @@
-use std::{fs::File, io::{self, BufRead}, path::Path};
-
 use dial::Dial;
 
 mod dial;
 
+const INPUT: &str = include_str!("../input/day01.in");
+
 fn main() {
-    let input_path = Path::new("input/day01.in");
-
-    let input_file = File::open(input_path).expect("Couldn't open input");
-
-    let lines = io::BufReader::new(input_file).lines();
-
     let mut dial = Dial::new();
-    for rotation in lines.map_while(Result::ok) {
-        dial.apply(&rotation);
+    for rotation in INPUT.lines() {
+        dial.apply(rotation);
     }
 
     println!("{}", dial.password());

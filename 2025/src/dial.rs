@@ -1,35 +1,39 @@
-use std::str::FromStr;
-
 pub struct Dial {
     point_at: i16,
     times_at_zero_after_rotation: u32,
     times_at_zero_after_click: u32,
 }
 
-impl Dial {
-    pub fn new() -> Dial {
-        Dial {
+impl Default for Dial {
+    fn default() -> Self {
+        Self {
             point_at: 50,
             times_at_zero_after_rotation: 0,
             times_at_zero_after_click: 0,
         }
     }
+}
+
+impl Dial {
+    pub fn new() -> Self {
+        Self::default()
+    }
 
     pub fn apply(&mut self, rotation: &str) {
-        let distance = i16::from_str(&rotation[1..]).expect(&format!("Invalid rotation: {}", rotation));
-        match &rotation[0..1] {
-            "R" => {
-                for _ in 0..distance {
-                    self.click(1);
-                }
-            },
-            "L" => {
-                for _ in 0..distance {
-                    self.click(-1);
-                }
-            },
+        let direction = rotation.chars().next().expect("Rotation was empty");
+        let distance = rotation[direction.len_utf8()..]
+            .parse()
+            .unwrap_or_else(|_| panic!("Invalid rotation: {}", rotation));
+        let step = match direction {
+            'R' => 1,
+            'L' => -1,
             _ => panic!("Invalid rotation: {}", rotation),
+        };
+
+        for _ in 0..distance {
+            self.click(step);
         }
+
         if self.point_at == 0 {
             self.times_at_zero_after_rotation += 1;
         }
@@ -55,38 +59,38 @@ impl Dial {
 #[test]
 fn test_dial() {
     let mut dial = Dial::new();
-    assert_eq!(0, dial.password());
-    assert_eq!(50, dial.point_at);
+    assert_eq!(dial.password(), 0);
+    assert_eq!(dial.point_at, 50);
 
     // can turn right
     dial.apply("R12");
-    assert_eq!(0, dial.password());
-    assert_eq!(62, dial.point_at);
+    assert_eq!(dial.password(), 0);
+    assert_eq!(dial.point_at, 62);
 
     // can turn left
     dial.apply("L30");
-    assert_eq!(0, dial.password());
-    assert_eq!(32, dial.point_at);
+    assert_eq!(dial.password(), 0);
+    assert_eq!(dial.point_at, 32);
 
     // counts times at 0 turning left
     dial.apply("L32");
-    assert_eq!(1, dial.password());
-    assert_eq!(0, dial.point_at);
+    assert_eq!(dial.password(), 1);
+    assert_eq!(dial.point_at, 0);
 
-    // wraps aroung turning right
+    // wraps around turning right
     dial.apply("R105");
-    assert_eq!(1, dial.password());
-    assert_eq!(5, dial.point_at);
+    assert_eq!(dial.password(), 1);
+    assert_eq!(dial.point_at, 5);
 
     // wraps around turning left
     dial.apply("L15");
-    assert_eq!(1, dial.password());
-    assert_eq!(90, dial.point_at);
+    assert_eq!(dial.password(), 1);
+    assert_eq!(dial.point_at, 90);
 
     // counts times at 0 turning right
     dial.apply("R10");
-    assert_eq!(2, dial.password());
-    assert_eq!(0, dial.point_at);
+    assert_eq!(dial.password(), 2);
+    assert_eq!(dial.point_at, 0);
 }
 
 #[test]
@@ -94,10 +98,26 @@ fn test_times_at_zero_after_click() {
     let mut dial = Dial::new();
 
     dial.apply("R1000");
-    assert_eq!(50, dial.point_at);
-    assert_eq!(10, dial.times_at_zero_after_click);
+    assert_eq!(dial.point_at, 50);
+    assert_eq!(dial.times_at_zero_after_click, 10);
 
     dial.apply("L1000");
-    assert_eq!(50, dial.point_at);
-    assert_eq!(20, dial.times_at_zero_after_click);
+    assert_eq!(dial.point_at, 50);
+    assert_eq!(dial.times_at_zero_after_click, 20);
+}
+
+#[test]
+#[should_panic]
+fn test_invalid_direction() {
+    let mut dial = Dial::default();
+
+    dial.apply("😍12");
+}
+
+#[test]
+#[should_panic]
+fn test_invalid_distance() {
+    let mut dial = Dial::default();
+
+    dial.apply("Lpapageno");
 }
