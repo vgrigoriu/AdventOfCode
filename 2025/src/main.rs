@@ -1,7 +1,6 @@
 use aoc2025::dial::Dial;
 
-mod day02;
-mod day03;
+mod day04;
 
 const INPUT01: &str = include_str!("../input/day01.in");
 
@@ -14,8 +13,6 @@ fn main() {
     println!("{}", dial.password());
     println!("{}", dial.real_password());
 
-    day02::solve1();
-    day02::solve2();
-    day03::solve1();
-    day03::solve2();
+    day04::solve1();
+    day04::solve2();
 }
