@@ -1,5 +1,5 @@
-use criterion::{Criterion, criterion_group, criterion_main};
 use aoc2025::dial::Dial;
+use criterion::{Criterion, criterion_group, criterion_main};
 
 fn benchmark_dial(c: &mut Criterion) {
     c.bench_function("Dial::apply", |b| {
