@@ -34,7 +34,7 @@ impl Dial {
 
         self.point_at += distance;
 
-        let crossings = self.point_at.div_euclid(100).abs() as u32;
+        let crossings = self.point_at.div_euclid(100).unsigned_abs();
         self.times_at_zero_after_click += crossings;
 
         self.point_at = self.point_at.rem_euclid(100);
