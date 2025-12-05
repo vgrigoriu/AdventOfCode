@@ -12,7 +12,7 @@ pub fn solve1() {
 }
 
 pub fn solve2() {
-        let mut dial = Dial::new();
+    let mut dial = Dial::new();
     for rotation in INPUT.lines() {
         dial.apply(rotation);
     }

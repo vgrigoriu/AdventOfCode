@@ -1,25 +1,29 @@
-use std::{cmp::{max, min}, ops::RangeInclusive};
+use std::{
+    cmp::{max, min},
+    ops::RangeInclusive,
+};
 
 const INPUT: &str = include_str!("../input/day05.in");
 
 pub fn solve1() {
-    let ranges: Vec<RangeInclusive<u64>> = INPUT.lines()
-        .take_while(|line| {line.contains('-')})
+    let ranges: Vec<RangeInclusive<u64>> = INPUT
+        .lines()
+        .take_while(|line| line.contains('-'))
         .map(parse_range)
         .collect();
-    let ingredients = INPUT.lines()
+    let ingredients = INPUT
+        .lines()
         .skip_while(|line| line.contains('-') || line.is_empty())
         .map(|s| s.parse().unwrap());
 
-    let how_many_fresh_ingredients = ingredients
-        .filter(|i| is_fresh(*i, &ranges))
-        .count();
+    let how_many_fresh_ingredients = ingredients.filter(|i| is_fresh(*i, &ranges)).count();
     println!("{}", how_many_fresh_ingredients);
 }
 
 pub fn solve2() {
-    let mut ranges: Vec<RangeInclusive<u64>> = INPUT.lines()
-        .take_while(|line| {line.contains('-')})
+    let mut ranges: Vec<RangeInclusive<u64>> = INPUT
+        .lines()
+        .take_while(|line| line.contains('-'))
         .map(parse_range)
         .collect();
 
@@ -43,14 +47,15 @@ pub fn solve2() {
         }
     }
 
-    let total_fresh_ingredients: u64 = ranges.iter()
-        .map(|r| r.end() - r.start() + 1)
-        .sum();
+    let total_fresh_ingredients: u64 = ranges.iter().map(|r| r.end() - r.start() + 1).sum();
     println!("{}", total_fresh_ingredients);
 }
 
 fn parse_range(input_range: &str) -> RangeInclusive<u64> {
-    let parts: Vec<u64> = input_range.split("-").map(|s| s.parse::<u64>().unwrap()).collect();
+    let parts: Vec<u64> = input_range
+        .split("-")
+        .map(|s| s.parse::<u64>().unwrap())
+        .collect();
     parts[0]..=parts[1]
 }
 
