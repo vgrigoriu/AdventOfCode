@@ -1,12 +1,9 @@
 const CONTAINERS: [u32; 20] = [
-            50, 44, 11, 49, 42, 46, 18, 32, 26, 40, 21, 7, 18, 43, 10, 47, 36, 24, 22, 40,
-        ];
+    50, 44, 11, 49, 42, 46, 18, 32, 26, 40, 21, 7, 18, 43, 10, 47, 36, 24, 22, 40,
+];
 
 pub fn solve1() {
-    let all_combinations = count_combinations(
-        150,
-        &CONTAINERS,
-    );
+    let all_combinations = count_combinations(150, &CONTAINERS);
     println!("{}", all_combinations);
 }
 
@@ -50,8 +47,11 @@ fn count_combinations_limited(target: u32, containers_left: usize, containers: &
         1 + count_combinations_limited(target, containers_left, &containers[1..])
     } else if target > containers[0] {
         // Either fill the first container, or not.
-        count_combinations_limited(target - containers[0], containers_left - 1, &containers[1..])
-            + count_combinations_limited(target, containers_left, &containers[1..])
+        count_combinations_limited(
+            target - containers[0],
+            containers_left - 1,
+            &containers[1..],
+        ) + count_combinations_limited(target, containers_left, &containers[1..])
     } else
     /* target < containers[0] */
     {
@@ -69,13 +69,7 @@ fn test_count_combinations() {
     assert_eq!(count_combinations(12, &[12, 12]), 2);
     assert_eq!(count_combinations(25, &[20, 15, 10, 5, 5]), 4);
 
-    assert_eq!(
-        count_combinations(
-            150,
-            &CONTAINERS
-        ),
-        654
-    );
+    assert_eq!(count_combinations(150, &CONTAINERS), 654);
 }
 
 #[test]
