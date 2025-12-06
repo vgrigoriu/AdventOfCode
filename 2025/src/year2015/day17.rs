@@ -20,7 +20,7 @@ pub fn solve2() {
 }
 
 fn count_combinations(target: u32, containers: &[u32]) -> u32 {
-    if containers.len() == 0 {
+    if containers.is_empty() {
         0
     } else if target == containers[0] {
         // Use the first container and be done, or try the others.
@@ -38,9 +38,7 @@ fn count_combinations(target: u32, containers: &[u32]) -> u32 {
 }
 
 fn count_combinations_limited(target: u32, containers_left: usize, containers: &[u32]) -> u32 {
-    if containers.len() == 0 {
-        0
-    } else if containers_left == 0 {
+    if containers.is_empty() || containers_left == 0 {
         0
     } else if target == containers[0] {
         // Use the first container and be done, or try the others.

@@ -54,10 +54,7 @@ fn solve_chunk(chunk: &[Vec<char>]) -> u64 {
         other => panic!("Unexpected operator: {other}"),
     };
 
-    chunk
-        .iter()
-        .map(|line| parse_line(line))
-        .fold(init, |acc, n| op(acc, n))
+    chunk.iter().map(|line| parse_line(line)).fold(init, op)
 }
 
 fn parse_line(line: &[char]) -> u64 {
