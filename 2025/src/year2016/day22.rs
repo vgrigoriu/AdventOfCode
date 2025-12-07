@@ -19,8 +19,8 @@ pub fn solve1() {
 
 pub fn solve2() {
     let nodes: Vec<Node> = INPUT.lines().skip(2).map(Node::from).collect();
-    let max_x = nodes.iter().map(|node| node.x).max().unwrap() as usize;
-    let max_y = nodes.iter().map(|node| node.y).max().unwrap() as usize;
+    let max_x = nodes.iter().map(|node| node.x).max().unwrap();
+    let max_y = nodes.iter().map(|node| node.y).max().unwrap();
 
     let mut nodes_grid: Vec<_> = (0..=max_y)
         .map(|_| vec![Node::default(); max_x + 1])
