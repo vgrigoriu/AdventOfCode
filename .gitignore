@@ -291,3 +291,4 @@ a.out
 
 # python
 __pycache__/
+.claude/settings.local.json

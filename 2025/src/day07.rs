@@ -1,4 +1,4 @@
-use aoc2025::utilities::parse_grid;
+use aoc2025::utilities::{map_grid, parse_grid};
 
 const INPUT: &str = include_str!("../input/day07.in");
 
@@ -29,7 +29,7 @@ pub fn solve1() {
 
 pub fn solve2() {
     let mut manifold = parse_grid(INPUT);
-    let mut worlds = vec![vec![0; manifold[0].len()]; manifold.len()];
+    let mut worlds = map_grid(&manifold, |_| 0u64);
 
     let entry_point = manifold[0].iter().position(|&ch| ch == 'S').unwrap();
     manifold[1][entry_point] = '|';
