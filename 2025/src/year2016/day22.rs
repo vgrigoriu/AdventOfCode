@@ -22,7 +22,9 @@ pub fn solve2() {
     let max_x = nodes.iter().map(|node| node.x).max().unwrap() as usize;
     let max_y = nodes.iter().map(|node| node.y).max().unwrap() as usize;
 
-    let mut nodes_grid: Vec<_> = (0..=max_y).map(|_| vec![Node::default(); max_x + 1]).collect();
+    let mut nodes_grid: Vec<_> = (0..=max_y)
+        .map(|_| vec![Node::default(); max_x + 1])
+        .collect();
     for &node in &nodes {
         nodes_grid[node.y][node.x] = node;
     }
@@ -77,7 +79,12 @@ impl Node {
 
 impl Default for Node {
     fn default() -> Self {
-        Node {x: 0, y: 0, used: 1000, avail: 0 }
+        Node {
+            x: 0,
+            y: 0,
+            used: 1000,
+            avail: 0,
+        }
     }
 }
 

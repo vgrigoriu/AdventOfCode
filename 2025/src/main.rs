@@ -1,6 +1,6 @@
-use aoc2025::year2016;
+mod day07;
 
 fn main() {
-    year2016::day22::solve1();
-    year2016::day22::solve2();
+    day07::solve1();
+    day07::solve2();
 }

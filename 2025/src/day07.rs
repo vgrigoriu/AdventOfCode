@@ -1,0 +1,62 @@
+const INPUT: &str = include_str!("../input/day07.in");
+
+pub fn solve1() {
+    let mut manifold: Vec<Vec<_>> = INPUT.lines().map(|line| line.chars().collect()).collect();
+
+    let entry_point = manifold[0]
+        .iter()
+        .position(|&ch| ch == 'S')
+        .unwrap();
+    manifold[1][entry_point] = '|';
+
+    let mut how_many_splits = 0;
+    for line_no in 0..manifold.len() - 1 {
+        for col_no in 0..manifold[line_no].len() {
+            let ch = manifold[line_no][col_no];
+            if ch == '|' {
+                if manifold[line_no + 1][col_no] == '^' {
+                    how_many_splits += 1;
+                    manifold[line_no + 1][col_no - 1] = '|';
+                    manifold[line_no + 1][col_no + 1] = '|';
+                } else {
+                    manifold[line_no + 1][col_no] = '|';
+                }
+            }
+        }
+    }
+
+    println!("{how_many_splits}");
+}
+
+pub fn solve2() {
+    let mut manifold: Vec<Vec<_>> = INPUT.lines().map(|line| line.chars().collect()).collect();
+    let mut worlds = vec![vec![0; manifold[0].len()]; manifold.len()];
+
+    let entry_point = manifold[0]
+        .iter()
+        .position(|&ch| ch == 'S')
+        .unwrap();
+    manifold[1][entry_point] = '|';
+    worlds[1][entry_point] = 1;
+
+    for line_no in 0..manifold.len() - 1 {
+        for col_no in 0..manifold[line_no].len() {
+            let ch = manifold[line_no][col_no];
+            let current_worlds = worlds[line_no][col_no];
+            if ch == '|' {
+                if manifold[line_no + 1][col_no] == '^' {
+                    manifold[line_no + 1][col_no - 1] = '|';
+                    worlds[line_no + 1][col_no - 1] += current_worlds;
+                    manifold[line_no + 1][col_no + 1] = '|';
+                    worlds[line_no + 1][col_no + 1] += current_worlds;
+                } else {
+                    manifold[line_no + 1][col_no] = '|';
+                    worlds[line_no + 1][col_no] += current_worlds;
+                }
+            }
+        }
+    }
+
+    let how_many_worlds = worlds.last().unwrap().iter().sum::<u64>();
+    println!("{}", how_many_worlds);
+}
