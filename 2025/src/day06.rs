@@ -1,3 +1,5 @@
+use aoc2025::utilities::parse_grid;
+
 const INPUT: &str = include_str!("../input/day06.in");
 
 pub fn solve1() {
@@ -30,7 +32,7 @@ pub fn solve1() {
 }
 
 pub fn solve2() {
-    let original_lines: Vec<Vec<char>> = INPUT.lines().map(|line| line.chars().collect()).collect();
+    let original_lines = parse_grid(INPUT);
     let transposed = transpose(&original_lines);
 
     let chunks = transposed.split(|line| line.iter().all(|ch| ch.is_ascii_whitespace()));

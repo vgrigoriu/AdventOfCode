@@ -1,12 +1,11 @@
+use aoc2025::utilities::parse_grid;
+
 const INPUT: &str = include_str!("../input/day07.in");
 
 pub fn solve1() {
-    let mut manifold: Vec<Vec<_>> = INPUT.lines().map(|line| line.chars().collect()).collect();
+    let mut manifold = parse_grid(INPUT);
 
-    let entry_point = manifold[0]
-        .iter()
-        .position(|&ch| ch == 'S')
-        .unwrap();
+    let entry_point = manifold[0].iter().position(|&ch| ch == 'S').unwrap();
     manifold[1][entry_point] = '|';
 
     let mut how_many_splits = 0;
@@ -29,13 +28,10 @@ pub fn solve1() {
 }
 
 pub fn solve2() {
-    let mut manifold: Vec<Vec<_>> = INPUT.lines().map(|line| line.chars().collect()).collect();
+    let mut manifold = parse_grid(INPUT);
     let mut worlds = vec![vec![0; manifold[0].len()]; manifold.len()];
 
-    let entry_point = manifold[0]
-        .iter()
-        .position(|&ch| ch == 'S')
-        .unwrap();
+    let entry_point = manifold[0].iter().position(|&ch| ch == 'S').unwrap();
     manifold[1][entry_point] = '|';
     worlds[1][entry_point] = 1;
 
