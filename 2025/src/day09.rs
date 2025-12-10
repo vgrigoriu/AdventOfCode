@@ -1,5 +1,3 @@
-use std::collections::VecDeque;
-
 const INPUT: &str = include_str!("../input/day09.in");
 
 pub fn solve1() {
@@ -31,95 +29,103 @@ pub fn solve2() {
     })
     .collect();
 
-    let min_x = tiles.iter().map(|t|t.0).min().unwrap();
-    let max_x = tiles.iter().map(|t|t.0).max().unwrap();
-    let min_y = tiles.iter().map(|t|t.1).min().unwrap();
-    let max_y = tiles.iter().map(|t|t.1).max().unwrap();
-
-    println!("Grid will be {}lx{}c", max_y -min_y+1, max_x-min_x+1);
-    println!("translaring tiles...");
-    let translated_tiles: Vec<_> = tiles.iter().map(|t| (t.0 - min_x, t.1 - min_y)).collect();
-    println!("allocating grid...");
-    let mut grid: Vec<_> = (0..=(max_y - min_y)).map(|_| vec!['.'; max_x-min_x+1]).collect();
-
-    // draw lines
-    println!("drawing lines...");
-    let mut previous_tile = translated_tiles[0];
-    grid[previous_tile.1][previous_tile.0] = '#';
-    for &tile in &translated_tiles[1..] {
-        grid[tile.1][tile.0] = '#';
-        fill_line(&mut grid, tile, previous_tile);
-        previous_tile = tile;
+    let v_lines: Vec<_> = (0..tiles.len()).filter_map(|i| VLine::from_tiles(tiles[i], tiles[(i+1)%tiles.len()])).collect();
+    for l in &v_lines {
+        println!("V: {} {}-{}", l.x, l.bottom, l.top);
     }
-    fill_line(&mut grid, previous_tile, translated_tiles[0]);
+    let h_lines: Vec<_> = (0..tiles.len()).filter_map(|i| HLine::from_tiles(tiles[i], tiles[(i+1)%tiles.len()])).collect();
+    for l in &h_lines {
+        println!("H: {} {}-{}", l.y, l.left, l.right);
+    }
 
-    // fill in the shape
-    // 1. find one point inside
-    println!("finding a point inside...");
-    let mut point_inside = (0, 0);
-    for y in 0..grid.len() {
-        for x in 0..grid[y].len() {
-            if grid[y][x] == '#' {
-                // hit a corner, don't know how to proceed
-                break;
+    let mut max_size = 0;
+    for i in 0..tiles.len() {
+        for j in i+1..tiles.len() {
+            let tile1 = tiles[i];
+            let tile2 = tiles[j];
+
+            let rect = Rect::new(tile1, tile2);
+            let intersects = v_lines.iter().any(|&l| rect.intersects_v(l)) || h_lines.iter().any(|&l| rect.intersects_h(l));
+            if intersects {
+                println!("It intersects: {:?}", rect);
+                continue;
             }
-            if grid[y][x] == 'X' {
-                // next one is inside
-                point_inside = (x+1, y);
-                break;
+
+            let current_size = (tile1.0.abs_diff(tile2.0) + 1) * (tile1.1.abs_diff(tile2.1) + 1);
+            if max_size < current_size {
+                max_size = current_size;
             }
         }
-        if point_inside != (0, 0) {
-            break;
-        }
     }
 
-    println!("filling in...");
-    let mut queue = VecDeque::new();
-    queue.push_back(point_inside);
-    while !queue.is_empty() {
-        let point = queue.pop_front().unwrap();
-        if grid[point.1][point.0] != '.' {
-            //already visited
-            continue;
-        }
-        grid[point.1][point.0] = 'X';
-        queue.push_back((point.0-1, point.1));
-        queue.push_back((point.0+1, point.1));
-        queue.push_back((point.0, point.1-1));
-        queue.push_back((point.0, point.1+1));
-    }
-
-    // for line in grid {
-    //     for ch in line {
-    //         print!("{}", ch);
-    //     }
-    //     println!();
-    // }
+    println!("{max_size}");
 }
 
-fn fill_line(grid: &mut [Vec<char>], tile: (usize, usize), previous_tile: (usize, usize)) {
-    if previous_tile.0 == tile.0 {
-        let x = tile.0;
-        if previous_tile.1 < tile.1 {
-            for y in (previous_tile.1+1)..tile.1 {
-                grid[y][x] = 'X';
-            }
+#[derive(Copy, Clone, Debug)]
+struct HLine {
+    y: usize,
+    left: usize,
+    right: usize,
+}
+
+impl HLine {
+    fn from_tiles(tile1: (usize, usize), tile2: (usize, usize)) -> Option<Self> {
+        if tile1.1 != tile2.1 {
+            None
         } else {
-            for y in (tile.1+1)..previous_tile.1 {
-                grid[y][x] = 'X';
-            }
+            Some(HLine { y: tile1.1, left: tile1.0.min(tile2.0), right: tile1.0.max(tile2.0) })
         }
-    } else {
-        let y = tile.1;
-        if previous_tile.0 < tile.0 {
-            for x in (previous_tile.0+1)..tile.0 {
-                grid[y][x] = 'X';
-            }
+    }
+}
+
+#[derive(Copy, Clone, Debug)]
+struct VLine {
+    x: usize,
+    top: usize,
+    bottom: usize,
+}
+
+impl VLine {
+    fn from_tiles(tile1: (usize, usize), tile2: (usize, usize)) -> Option<Self> {
+        if tile1.0 != tile2.0 {
+            None
         } else {
-            for x in (tile.0+1)..previous_tile.0 {
-                grid[y][x] = 'X';
-            }
+            Some(VLine { x: tile1.0, top: tile1.1.max(tile2.1), bottom: tile1.1.min(tile2.1) })
         }
+    }
+}
+
+#[derive(Copy, Clone, Debug)]
+struct Rect {
+    top: usize,
+    bottom: usize,
+    left: usize,
+    right: usize,
+}
+
+impl Rect {
+    fn new(tile1: (usize, usize), tile2:(usize, usize)) -> Self {
+        Rect {
+            top: tile1.1.max(tile2.1),
+            bottom: tile1.1.min(tile2.1),
+            left: tile1.0.min(tile2.0),
+            right: tile1.0.max(tile2.0),
+        }
+    }
+
+    fn intersects_v(self, line: VLine) -> bool {
+        let result = self.left < line.x && line.x < self.right && self.bottom < line.top && self.top < line.bottom;
+        if result {
+            println!("{:?} intersects {:?}", self, line);
+        }
+        result
+    }
+
+    fn intersects_h(self, line: HLine) -> bool {
+        let result = self.bottom < line.y && line.y < self.top && self.left < line.right && line.left < self.right;
+        if result {
+            println!("{:?} intersects {:?}", self, line);
+        }
+        result
     }
 }
