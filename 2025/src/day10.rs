@@ -1,5 +1,3 @@
-use std::u8;
-
 use regex::Regex;
 
 const INPUT: &str = include_str!("../input/day10.in");
@@ -7,7 +5,7 @@ const INPUT: &str = include_str!("../input/day10.in");
 pub fn solve1() {
     let machines: Vec<_> = INPUT.lines().map(Machine::parse).collect();
 
-    let min_presses:u32 = machines.iter().map(|m| m.least_button_presses()).sum();
+    let min_presses: u32 = machines.iter().map(|m| m.least_button_presses()).sum();
 
     println!("{min_presses}");
 }
@@ -20,14 +18,17 @@ pub fn solve2() {
 
 #[derive(Debug)]
 struct Button {
-    toggles: Vec<usize>
+    toggles: Vec<usize>,
 }
 
 impl Button {
     fn parse(line: &str) -> Self {
         // `(0,3,4,5,6)`
-        let toggles: Vec<usize> = line[1..line.len()-1].split(",").filter_map(|s| s.parse().ok()).collect();
-        Self {toggles}
+        let toggles: Vec<usize> = line[1..line.len() - 1]
+            .split(",")
+            .filter_map(|s| s.parse().ok())
+            .collect();
+        Self { toggles }
     }
 }
 
@@ -43,9 +44,16 @@ impl Machine {
         let captures = re.captures(line).unwrap();
 
         let target_lights: Vec<_> = captures["lights"].chars().map(|ch| ch == '#').collect();
-        let buttons: Vec<_> = captures["buttons"].split(" ").filter(|&s| !s.is_empty()).map(Button::parse).collect();
+        let buttons: Vec<_> = captures["buttons"]
+            .split(" ")
+            .filter(|&s| !s.is_empty())
+            .map(Button::parse)
+            .collect();
 
-        Self { target_lights, buttons }
+        Self {
+            target_lights,
+            buttons,
+        }
     }
 
     fn least_button_presses(&self) -> u32 {
@@ -74,6 +82,4 @@ impl Machine {
             lights[toggle] = !lights[toggle];
         }
     }
-
-
 }
