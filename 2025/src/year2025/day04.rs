@@ -54,8 +54,8 @@ fn count_neighbors(grid: &[Vec<char>], i: usize, j: usize) -> usize {
     let j_min = if j == 0 { 0 } else { j - 1 };
     let j_max = min(j + 1, grid[i].len() - 1);
 
-    for ii in i_min..=i_max {
-        for jj in j_min..=j_max {
+    for (ii, _) in grid.iter().enumerate().take(i_max + 1).skip(i_min) {
+        for (jj, _) in grid.iter().enumerate().take(j_max + 1).skip(j_min) {
             if ii == i && jj == j {
                 continue;
             }

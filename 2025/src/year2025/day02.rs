@@ -34,7 +34,8 @@ fn is_invalid_id(id: u64) -> bool {
 
     let first_half: String = id_str.chars().take(len / 2).collect();
     let second_half: String = id_str.chars().skip(len / 2).collect();
-    return first_half == second_half;
+
+    first_half == second_half
 }
 
 fn is_real_invalid_id(id: u64) -> bool {
@@ -42,7 +43,7 @@ fn is_real_invalid_id(id: u64) -> bool {
     let len = id_str.len();
 
     for n in 1..=len / 2 {
-        if len % n != 0 {
+        if !len.is_multiple_of(n) {
             continue;
         }
         let sequence: String = id_str.chars().take(n).collect();

@@ -29,7 +29,8 @@ fn find_index_of_first_digit_smaller_than_next(digits: &[char]) -> usize {
             return index;
         }
     }
-    return digits.len() - 1;
+
+    digits.len() - 1
 }
 
 fn digits_slice_to_u64(digits: &[char]) -> u64 {
