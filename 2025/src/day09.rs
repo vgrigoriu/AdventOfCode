@@ -129,29 +129,10 @@ mod test {
     fn intersects_h(rect: &Rect, line: &HLine) -> bool {
         let mut grid = vec![vec!['.'; 10]; 10];
 
-        for x in rect.left..rect.right {
-            grid[rect.top][x] = '#';
-        }
-        for y in rect.top..rect.bottom {
-            grid[y][rect.right] = '#';
-        }
-        for x in (rect.left..rect.right).rev() {
-            grid[rect.bottom][x + 1] = '#';
-        }
-        for y in (rect.top..rect.bottom).rev() {
-            grid[y + 1][rect.left] = '#';
-        }
+        draw_rect(&mut grid, rect);
+        draw_h_line(&mut grid, line);
+        print_grid(&grid);
 
-        for x in line.left..=line.right {
-            grid[line.y][x] = '-';
-        }
-
-        for y in 0..grid.len() {
-            for x in 0..grid[y].len() {
-                print!("{}", grid[y][x]);
-            }
-            println!();
-        }
         let result = rect.intersects_h(line);
         println!("Intersects: {result}\n");
 
@@ -161,6 +142,17 @@ mod test {
     fn intersects_v(rect: &Rect, line: &VLine) -> bool {
         let mut grid = vec![vec!['.'; 10]; 10];
 
+        draw_rect(&mut grid, rect);
+        draw_v_line(&mut grid, line);
+        print_grid(&grid);
+
+        let result = rect.intersects_v(line);
+        println!("Intersects: {result}\n");
+
+        result
+    }
+
+    fn draw_rect(grid: &mut [Vec<char>], rect: &Rect) {
         for x in rect.left..rect.right {
             grid[rect.top][x] = '#';
         }
@@ -173,21 +165,24 @@ mod test {
         for y in (rect.top..rect.bottom).rev() {
             grid[y + 1][rect.left] = '#';
         }
+    }
 
+    fn draw_h_line(grid: &mut [Vec<char>], line: &HLine) {
+        for x in line.left..=line.right {
+            grid[line.y][x] = '-';
+        }
+    }
+
+    fn draw_v_line(grid: &mut [Vec<char>], line: &VLine) {
         for y in line.top..=line.bottom {
             grid[y][line.x] = '|';
         }
+    }
 
-        for y in 0..grid.len() {
-            for x in 0..grid[y].len() {
-                print!("{}", grid[y][x]);
-            }
-            println!();
+    fn print_grid(grid: &[Vec<char>]) {
+        for row in grid {
+            println!("{}", row.iter().collect::<String>());
         }
-        let result = rect.intersects_v(line);
-        println!("Intersects: {result}\n");
-
-        result
     }
 
     #[test]
