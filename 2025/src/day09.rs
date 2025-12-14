@@ -3,7 +3,7 @@ use aoc2025::tile::Tile;
 const INPUT: &str = include_str!("../input/day09.in");
 
 pub fn solve1() {
-    let tiles: Vec<Tile> = INPUT.lines().map(|line| line.parse().unwrap()).collect();
+    let tiles: Vec<Tile> = parse_tiles();
 
     let mut max_size = 0;
     for i in 0..tiles.len() {
@@ -21,7 +21,7 @@ pub fn solve1() {
 }
 
 pub fn solve2() {
-    let tiles: Vec<Tile> = INPUT.lines().map(|line| line.parse().unwrap()).collect();
+    let tiles: Vec<Tile> = parse_tiles();
 
     let v_lines: Vec<_> = (0..tiles.len())
         .filter_map(|i| VLine::from_tiles(tiles[i], tiles[(i + 1) % tiles.len()]))
@@ -52,6 +52,10 @@ pub fn solve2() {
         .unwrap();
 
     println!("{}", the_one.size());
+}
+
+fn parse_tiles() -> Vec<Tile> {
+    INPUT.lines().map(|line| line.parse().unwrap()).collect()
 }
 
 #[derive(Copy, Clone, Debug)]
