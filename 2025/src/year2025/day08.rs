@@ -12,7 +12,10 @@ struct JunctionBox {
 
 impl JunctionBox {
     fn distance_to(&self, other: &Self) -> f64 {
-        ((self.x - other.x) * (self.x - other.x) + (self.y - other.y) * (self.y - other.y) + (self.z - other.z) * (self.z - other.z)).sqrt()
+        ((self.x - other.x) * (self.x - other.x)
+            + (self.y - other.y) * (self.y - other.y)
+            + (self.z - other.z) * (self.z - other.z))
+            .sqrt()
     }
 }
 
@@ -20,7 +23,7 @@ impl JunctionBox {
 struct Pair {
     box1: JunctionBox,
     box2: JunctionBox,
-    distance: f64
+    distance: f64,
 }
 
 impl Ord for Pair {
@@ -44,15 +47,28 @@ impl PartialEq for Pair {
 impl Eq for Pair {}
 
 pub fn solve1() {
-    let boxes: Vec<_> = INPUT.lines().enumerate().map(|(i, line)|{
-        let parts: Vec<_> = line.split(",").map(|part| part.parse().unwrap()).collect();
-        JunctionBox {no: i, x: parts[0], y: parts[1], z: parts[2]}
-    }).collect();
+    let boxes: Vec<_> = INPUT
+        .lines()
+        .enumerate()
+        .map(|(i, line)| {
+            let parts: Vec<_> = line.split(",").map(|part| part.parse().unwrap()).collect();
+            JunctionBox {
+                no: i,
+                x: parts[0],
+                y: parts[1],
+                z: parts[2],
+            }
+        })
+        .collect();
 
     let mut all_pairs = vec![];
     for i in 0..boxes.len() {
         for j in (i + 1)..boxes.len() {
-            all_pairs.push(Pair{box1: boxes[i], box2: boxes[j], distance: boxes[i].distance_to(&boxes[j])});
+            all_pairs.push(Pair {
+                box1: boxes[i],
+                box2: boxes[j],
+                distance: boxes[i].distance_to(&boxes[j]),
+            });
         }
     }
 
@@ -105,15 +121,28 @@ pub fn solve1() {
 }
 
 pub fn solve2() {
-        let boxes: Vec<_> = INPUT.lines().enumerate().map(|(i, line)|{
-        let parts: Vec<_> = line.split(",").map(|part| part.parse().unwrap()).collect();
-        JunctionBox {no: i, x: parts[0], y: parts[1], z: parts[2]}
-    }).collect();
+    let boxes: Vec<_> = INPUT
+        .lines()
+        .enumerate()
+        .map(|(i, line)| {
+            let parts: Vec<_> = line.split(",").map(|part| part.parse().unwrap()).collect();
+            JunctionBox {
+                no: i,
+                x: parts[0],
+                y: parts[1],
+                z: parts[2],
+            }
+        })
+        .collect();
 
     let mut all_pairs = vec![];
     for i in 0..boxes.len() {
         for j in (i + 1)..boxes.len() {
-            all_pairs.push(Pair{box1: boxes[i], box2: boxes[j], distance: boxes[i].distance_to(&boxes[j])});
+            all_pairs.push(Pair {
+                box1: boxes[i],
+                box2: boxes[j],
+                distance: boxes[i].distance_to(&boxes[j]),
+            });
         }
     }
 
@@ -153,6 +182,4 @@ pub fn solve2() {
             return;
         }
     }
-
-
 }

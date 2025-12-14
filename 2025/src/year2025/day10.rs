@@ -139,9 +139,20 @@ impl Machine {
         }
 
         if self.joltages != joltages {
-            let diff: Vec<_> = self.joltages.iter().zip(joltages.iter()).map(|(e, a)|e-a).collect();
+            let diff: Vec<_> = self
+                .joltages
+                .iter()
+                .zip(joltages.iter())
+                .map(|(e, a)| e - a)
+                .collect();
             let extra_solution = solve_system_minimizing_sum(&self.get_coefficients(), &diff);
-            println!("{}\n\tSolution: {:?}\n\tDiff: {:?}\n\tExtra solution: {:?}", self.input, presses, diff, extra_solution.unwrap());
+            println!(
+                "{}\n\tSolution: {:?}\n\tDiff: {:?}\n\tExtra solution: {:?}",
+                self.input,
+                presses,
+                diff,
+                extra_solution.unwrap()
+            );
         }
     }
 }

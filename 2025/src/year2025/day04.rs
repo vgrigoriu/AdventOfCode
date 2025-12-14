@@ -6,7 +6,7 @@ const INPUT: &str = include_str!("../../input/day04.in");
 
 pub fn solve1() {
     let grid = parse_grid(INPUT);
-    
+
     let mut how_many_rolls = 0;
     for i in 0..grid.len() {
         for j in 0..grid[i].len() {
@@ -49,9 +49,9 @@ pub fn solve2() {
 
 fn count_neighbors(grid: &[Vec<char>], i: usize, j: usize) -> usize {
     let mut count = 0;
-    let i_min = if i == 0 {0} else {i - 1};
-    let i_max = min (i + 1, grid.len() -1);
-    let j_min = if j == 0 {0} else {j-1};
+    let i_min = if i == 0 { 0 } else { i - 1 };
+    let i_max = min(i + 1, grid.len() - 1);
+    let j_min = if j == 0 { 0 } else { j - 1 };
     let j_max = min(j + 1, grid[i].len() - 1);
 
     for ii in i_min..=i_max {
