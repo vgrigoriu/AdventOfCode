@@ -14,9 +14,16 @@ pub fn solve1() {
 pub fn solve2() {
     let tiles = parse_tiles();
 
-    let consecutive_tiles: Vec<(Tile, Tile)> = tiles.iter().copied().circular_tuple_windows().collect();
-    let h_lines: Vec<_> = consecutive_tiles.iter().filter_map(|&(tile1, tile2)|HLine::from_tiles(tile1, tile2)).collect();
-    let v_lines: Vec<_> = consecutive_tiles.iter().filter_map(|&(tile1, tile2)|VLine::from_tiles(tile1, tile2)).collect();
+    let consecutive_tiles: Vec<(Tile, Tile)> =
+        tiles.iter().copied().circular_tuple_windows().collect();
+    let h_lines: Vec<_> = consecutive_tiles
+        .iter()
+        .filter_map(|&(tile1, tile2)| HLine::from_tiles(tile1, tile2))
+        .collect();
+    let v_lines: Vec<_> = consecutive_tiles
+        .iter()
+        .filter_map(|&(tile1, tile2)| VLine::from_tiles(tile1, tile2))
+        .collect();
 
     let max_size = all_rects(&tiles)
         .iter()
@@ -49,15 +56,11 @@ struct HLine {
 
 impl HLine {
     fn from_tiles(tile1: Tile, tile2: Tile) -> Option<Self> {
-        if tile1.1 != tile2.1 {
-            None
-        } else {
-            Some(HLine {
-                y: tile1.1,
-                left: tile1.0.min(tile2.0),
-                right: tile1.0.max(tile2.0),
-            })
-        }
+        (tile1.1 == tile2.1).then(|| HLine {
+            y: tile1.1,
+            left: tile1.0.min(tile2.0),
+            right: tile1.0.max(tile2.0),
+        })
     }
 }
 
@@ -70,15 +73,11 @@ struct VLine {
 
 impl VLine {
     fn from_tiles(tile1: Tile, tile2: Tile) -> Option<Self> {
-        if tile1.0 != tile2.0 {
-            None
-        } else {
-            Some(VLine {
-                x: tile1.0,
-                top: tile1.1.min(tile2.1),
-                bottom: tile1.1.max(tile2.1),
-            })
-        }
+        (tile1.0 == tile2.0).then(|| VLine {
+            x: tile1.0,
+            top: tile1.1.min(tile2.1),
+            bottom: tile1.1.max(tile2.1),
+        })
     }
 }
 
@@ -105,8 +104,7 @@ impl Rect {
     }
 
     fn intersects_any(&self, h_lines: &[HLine], v_lines: &[VLine]) -> bool {
-        v_lines.iter().any(|l| self.intersects_v(l))
-                || h_lines.iter().any(|l| self.intersects_h(l))
+        v_lines.iter().any(|l| self.intersects_v(l)) || h_lines.iter().any(|l| self.intersects_h(l))
     }
 
     fn intersects_v(&self, line: &VLine) -> bool {
