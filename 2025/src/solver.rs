@@ -26,7 +26,11 @@ pub fn solve_system_minimizing_sum(equations: &[Vec<u32>], rhs: &[u32]) -> Optio
     }
 
     let solution = problem.solve().ok()?;
-    Some(xs.iter().map(|&x| solution.value(x).round() as u32).collect())
+    Some(
+        xs.iter()
+            .map(|&x| solution.value(x).round() as u32)
+            .collect(),
+    )
 }
 
 #[cfg(test)]
