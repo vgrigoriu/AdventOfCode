@@ -1,13 +1,9 @@
+use aoc2025::tile::Tile;
+
 const INPUT: &str = include_str!("../input/day09.in");
 
 pub fn solve1() {
-    let tiles: Vec<(u64, u64)> = INPUT
-        .lines()
-        .map(|line| {
-            let parts: Vec<_> = line.split(",").collect();
-            (parts[0].parse().unwrap(), parts[1].parse().unwrap())
-        })
-        .collect();
+    let tiles: Vec<Tile> = INPUT.lines().map(|line| line.parse().unwrap()).collect();
 
     let mut max_size = 0;
     for i in 0..tiles.len() {
@@ -25,13 +21,7 @@ pub fn solve1() {
 }
 
 pub fn solve2() {
-    let tiles: Vec<(usize, usize)> = INPUT
-        .lines()
-        .map(|line| {
-            let parts: Vec<_> = line.split(",").collect();
-            (parts[0].parse().unwrap(), parts[1].parse().unwrap())
-        })
-        .collect();
+    let tiles: Vec<Tile> = INPUT.lines().map(|line| line.parse().unwrap()).collect();
 
     let v_lines: Vec<_> = (0..tiles.len())
         .filter_map(|i| VLine::from_tiles(tiles[i], tiles[(i + 1) % tiles.len()]))
@@ -72,7 +62,7 @@ struct HLine {
 }
 
 impl HLine {
-    fn from_tiles(tile1: (usize, usize), tile2: (usize, usize)) -> Option<Self> {
+    fn from_tiles(tile1: Tile, tile2: Tile) -> Option<Self> {
         if tile1.1 != tile2.1 {
             None
         } else {
@@ -93,7 +83,7 @@ struct VLine {
 }
 
 impl VLine {
-    fn from_tiles(tile1: (usize, usize), tile2: (usize, usize)) -> Option<Self> {
+    fn from_tiles(tile1: Tile, tile2: Tile) -> Option<Self> {
         if tile1.0 != tile2.0 {
             None
         } else {
@@ -115,7 +105,7 @@ struct Rect {
 }
 
 impl Rect {
-    fn new(tile1: (usize, usize), tile2: (usize, usize)) -> Self {
+    fn new(tile1: Tile, tile2: Tile) -> Self {
         Rect {
             top: tile1.1.min(tile2.1),
             bottom: tile1.1.max(tile2.1),
@@ -213,53 +203,53 @@ mod test {
 
     #[test]
     fn test_intersects_h() {
-        let rect = Rect::new((3, 3), (6, 6));
+        let rect = Rect::new(Tile(3, 3), Tile(6, 6));
 
-        let line = HLine::from_tiles((0, 0), (3, 0)).unwrap();
+        let line = HLine::from_tiles(Tile(0, 0), Tile(3, 0)).unwrap();
         assert!(!intersects_h(&rect, &line));
 
-        let line = HLine::from_tiles((0, 6), (5, 6)).unwrap();
+        let line = HLine::from_tiles(Tile(0, 6), Tile(5, 6)).unwrap();
         assert!(!intersects_h(&rect, &line));
 
-        let line = HLine::from_tiles((0, 4), (5, 4)).unwrap();
+        let line = HLine::from_tiles(Tile(0, 4), Tile(5, 4)).unwrap();
         assert!(intersects_h(&rect, &line));
 
-        let line = HLine::from_tiles((5, 5), (9, 5)).unwrap();
+        let line = HLine::from_tiles(Tile(5, 5), Tile(9, 5)).unwrap();
         assert!(intersects_h(&rect, &line));
 
-        let line = HLine::from_tiles((0, 6), (9, 6)).unwrap();
+        let line = HLine::from_tiles(Tile(0, 6), Tile(9, 6)).unwrap();
         assert!(!intersects_h(&rect, &line));
 
-        let line = HLine::from_tiles((0, 7), (9, 7)).unwrap();
+        let line = HLine::from_tiles(Tile(0, 7), Tile(9, 7)).unwrap();
         assert!(!intersects_h(&rect, &line));
     }
 
     #[test]
     fn test_intersects_v() {
-        let rect = Rect::new((3, 3), (6, 6));
+        let rect = Rect::new(Tile(3, 3), Tile(6, 6));
 
-        let line = VLine::from_tiles((0, 0), (0, 7)).unwrap();
+        let line = VLine::from_tiles(Tile(0, 0), Tile(0, 7)).unwrap();
         assert!(!intersects_v(&rect, &line));
 
-        let line = VLine::from_tiles((3, 4), (3, 5)).unwrap();
+        let line = VLine::from_tiles(Tile(3, 4), Tile(3, 5)).unwrap();
         assert!(!intersects_v(&rect, &line));
 
-        let line = VLine::from_tiles((4, 1), (4, 3)).unwrap();
+        let line = VLine::from_tiles(Tile(4, 1), Tile(4, 3)).unwrap();
         assert!(!intersects_v(&rect, &line));
 
-        let line = VLine::from_tiles((4, 1), (4, 4)).unwrap();
+        let line = VLine::from_tiles(Tile(4, 1), Tile(4, 4)).unwrap();
         assert!(intersects_v(&rect, &line));
 
-        let line = VLine::from_tiles((4, 1), (4, 9)).unwrap();
+        let line = VLine::from_tiles(Tile(4, 1), Tile(4, 9)).unwrap();
         assert!(intersects_v(&rect, &line));
 
-        let line = VLine::from_tiles((4, 4), (4, 9)).unwrap();
+        let line = VLine::from_tiles(Tile(4, 4), Tile(4, 9)).unwrap();
         assert!(intersects_v(&rect, &line));
 
-        let line = VLine::from_tiles((4, 6), (4, 9)).unwrap();
+        let line = VLine::from_tiles(Tile(4, 6), Tile(4, 9)).unwrap();
         assert!(!intersects_v(&rect, &line));
 
-        let line = VLine::from_tiles((7, 1), (7, 7)).unwrap();
+        let line = VLine::from_tiles(Tile(7, 1), Tile(7, 7)).unwrap();
         assert!(!intersects_v(&rect, &line));
     }
 }
