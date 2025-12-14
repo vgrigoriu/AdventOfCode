@@ -28,11 +28,10 @@ pub fn solve2() {
 
     let the_one = rects
         .iter()
-        .filter(|rect| {
+        .find(|rect| {
             !(v_lines.iter().any(|l| rect.intersects_v(l))
                 || h_lines.iter().any(|l| rect.intersects_h(l)))
         })
-        .next()
         .unwrap();
 
     println!("{}", the_one.size());
