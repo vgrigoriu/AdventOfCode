@@ -1,21 +1,12 @@
 use aoc2025::tile::Tile;
+use itertools::Itertools;
 
 const INPUT: &str = include_str!("../input/day09.in");
 
 pub fn solve1() {
     let tiles: Vec<Tile> = parse_tiles();
 
-    let mut max_size = 0;
-    for i in 0..tiles.len() {
-        for j in i + 1..tiles.len() {
-            let tile1 = tiles[i];
-            let tile2 = tiles[j];
-            let current_size = (tile1.0.abs_diff(tile2.0) + 1) * (tile1.1.abs_diff(tile2.1) + 1);
-            if max_size < current_size {
-                max_size = current_size;
-            }
-        }
-    }
+    let max_size = all_rects(&tiles).iter().map(Rect::size).max().unwrap();
 
     println!("{max_size}");
 }
@@ -30,17 +21,10 @@ pub fn solve2() {
         .filter_map(|i| HLine::from_tiles(tiles[i], tiles[(i + 1) % tiles.len()]))
         .collect();
 
-    let mut rects = vec![];
-    for i in 0..tiles.len() {
-        for j in i + 1..tiles.len() {
-            let tile1 = tiles[i];
-            let tile2 = tiles[j];
-
-            let rect = Rect::new(tile1, tile2);
-            rects.push(rect);
-        }
-    }
-    rects.sort_by_key(|r| -(r.size() as i64));
+    let rects: Vec<_> = all_rects(&tiles)
+        .into_iter()
+        .sorted_by_key(|r| -(r.size() as i64))
+        .collect();
 
     let the_one = rects
         .iter()
@@ -56,6 +40,14 @@ pub fn solve2() {
 
 fn parse_tiles() -> Vec<Tile> {
     INPUT.lines().map(|line| line.parse().unwrap()).collect()
+}
+
+fn all_rects(tiles: &[Tile]) -> Vec<Rect> {
+    tiles
+        .iter()
+        .tuple_combinations()
+        .map(|(&tile1, &tile2)| Rect::new(tile1, tile2))
+        .collect()
 }
 
 #[derive(Copy, Clone, Debug)]
