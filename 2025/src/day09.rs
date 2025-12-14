@@ -4,7 +4,7 @@ use itertools::Itertools;
 const INPUT: &str = include_str!("../input/day09.in");
 
 pub fn solve1() {
-    let tiles: Vec<Tile> = parse_tiles();
+    let tiles = parse_tiles();
 
     let max_size = all_rects(&tiles).iter().map(Rect::size).max().unwrap();
 
@@ -12,29 +12,20 @@ pub fn solve1() {
 }
 
 pub fn solve2() {
-    let tiles: Vec<Tile> = parse_tiles();
+    let tiles = parse_tiles();
 
-    let v_lines: Vec<_> = (0..tiles.len())
-        .filter_map(|i| VLine::from_tiles(tiles[i], tiles[(i + 1) % tiles.len()]))
-        .collect();
-    let h_lines: Vec<_> = (0..tiles.len())
-        .filter_map(|i| HLine::from_tiles(tiles[i], tiles[(i + 1) % tiles.len()]))
-        .collect();
+    let consecutive_tiles: Vec<(Tile, Tile)> = tiles.iter().copied().circular_tuple_windows().collect();
+    let h_lines: Vec<_> = consecutive_tiles.iter().filter_map(|&(tile1, tile2)|HLine::from_tiles(tile1, tile2)).collect();
+    let v_lines: Vec<_> = consecutive_tiles.iter().filter_map(|&(tile1, tile2)|VLine::from_tiles(tile1, tile2)).collect();
 
-    let rects: Vec<_> = all_rects(&tiles)
-        .into_iter()
-        .sorted_by_key(|r| -(r.size() as i64))
-        .collect();
-
-    let the_one = rects
+    let max_size = all_rects(&tiles)
         .iter()
-        .find(|rect| {
-            !(v_lines.iter().any(|l| rect.intersects_v(l))
-                || h_lines.iter().any(|l| rect.intersects_h(l)))
-        })
+        .filter(|&rect| !rect.intersects_any(&h_lines, &v_lines))
+        .map(Rect::size)
+        .max()
         .unwrap();
 
-    println!("{}", the_one.size());
+    println!("{max_size}");
 }
 
 fn parse_tiles() -> Vec<Tile> {
@@ -113,14 +104,19 @@ impl Rect {
         (self.right - self.left + 1) * (self.bottom - self.top + 1)
     }
 
-    fn intersects_v(self, line: &VLine) -> bool {
+    fn intersects_any(&self, h_lines: &[HLine], v_lines: &[VLine]) -> bool {
+        v_lines.iter().any(|l| self.intersects_v(l))
+                || h_lines.iter().any(|l| self.intersects_h(l))
+    }
+
+    fn intersects_v(&self, line: &VLine) -> bool {
         self.left < line.x
             && line.x < self.right
             && self.top < line.bottom
             && line.top < self.bottom
     }
 
-    fn intersects_h(self, line: &HLine) -> bool {
+    fn intersects_h(&self, line: &HLine) -> bool {
         self.top < line.y
             && line.y < self.bottom
             && self.left < line.right
@@ -159,7 +155,7 @@ mod test {
             println!();
         }
         let result = rect.intersects_h(line);
-        println!("Intesects: {result}\n");
+        println!("Intersects: {result}\n");
 
         result
     }
@@ -191,7 +187,7 @@ mod test {
             println!();
         }
         let result = rect.intersects_v(line);
-        println!("Intesects: {result}\n");
+        println!("Intersects: {result}\n");
 
         result
     }
