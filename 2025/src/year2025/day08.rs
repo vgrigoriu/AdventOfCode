@@ -1,6 +1,6 @@
 use std::{cmp::Ordering, collections::HashMap};
 
-const INPUT: &str = include_str!("../input/day08.in");
+const INPUT: &str = include_str!("../../input/day08.in");
 
 #[derive(Debug, Copy, Clone)]
 struct JunctionBox {

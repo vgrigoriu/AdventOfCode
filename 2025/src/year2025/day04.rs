@@ -1,8 +1,8 @@
 use std::cmp::min;
 
-use aoc2025::utilities::parse_grid;
+use crate::utilities::parse_grid;
 
-const INPUT: &str = include_str!("../input/day04.in");
+const INPUT: &str = include_str!("../../input/day04.in");
 
 pub fn solve1() {
     let grid = parse_grid(INPUT);
@@ -23,11 +23,10 @@ pub fn solve2() {
     let mut grid = parse_grid(INPUT);
     let mut grid_copy = grid.clone();
 
-    let mut rolls_removed = 0;
     let mut total_rolls_removed = 0;
 
     loop {
-        rolls_removed = 0;
+        let mut rolls_removed = 0;
         for i in 0..grid.len() {
             for j in 0..grid[i].len() {
                 if grid[i][j] == '@' && count_neighbors(&grid, i, j) < 4 {

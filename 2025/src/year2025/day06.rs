@@ -1,6 +1,6 @@
-use aoc2025::utilities::parse_grid;
+use crate::utilities::parse_grid;
 
-const INPUT: &str = include_str!("../input/day06.in");
+const INPUT: &str = include_str!("../../input/day06.in");
 
 pub fn solve1() {
     let lines: Vec<&str> = INPUT.lines().collect();

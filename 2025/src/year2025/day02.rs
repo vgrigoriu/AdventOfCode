@@ -1,4 +1,4 @@
-const INPUT: &str = include_str!("../input/day02.in");
+const INPUT: &str = include_str!("../../input/day02.in");
 
 pub fn solve1() {
     println!("{}", solve(is_invalid_id));

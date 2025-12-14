@@ -1,7 +1,7 @@
-use aoc2025::solver::solve_system_minimizing_sum;
+use crate::solver::solve_system_minimizing_sum;
 use regex::Regex;
 
-const INPUT: &str = include_str!("../input/day10.in");
+const INPUT: &str = include_str!("../../input/day10.in");
 
 pub fn solve1() {
     let machines: Vec<_> = INPUT.lines().map(Machine::parse).collect();
