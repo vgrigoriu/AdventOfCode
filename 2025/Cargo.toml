@@ -7,6 +7,7 @@ edition = "2024"
 anyhow = "1.0.100"
 good_lp = { version = "1.14.2", default-features = false, features = ["highs"] }
 itertools = "0.14.0"
+paste = "1.0.15"
 regex = "1.12.2"
 
 [dev-dependencies]

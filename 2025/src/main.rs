@@ -1,6 +1,5 @@
-use aoc2025::year2025::day09;
+use aoc2025::aoc;
 
 fn main() {
-    day09::solve1();
-    day09::solve2();
+    aoc!(2025, 9);
 }
