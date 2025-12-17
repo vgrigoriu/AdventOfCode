@@ -1,17 +1,18 @@
 use crate::solver::solve_system_minimizing_sum;
+use color_eyre::Result;
 use regex::Regex;
 
 const INPUT: &str = include_str!("../../input/2025/day10.in");
 
-pub fn solve1() {
+pub fn solve1() -> Result<u32> {
     let machines: Vec<_> = INPUT.lines().map(Machine::parse).collect();
 
     let min_presses: u32 = machines.iter().map(|m| m.least_button_presses()).sum();
 
-    println!("{min_presses}");
+    Ok(min_presses)
 }
 
-pub fn solve2() {
+pub fn solve2() -> Result<u32> {
     let machines: Vec<_> = INPUT.lines().map(Machine::parse).collect();
 
     let solutions: Vec<_> = machines
@@ -22,11 +23,11 @@ pub fn solve2() {
     // check solutions
     for (machine, solution) in machines.iter().zip(solutions.iter()) {
         //println!("Machine: {}\nSolution: {:?}", machine.input, solution);
-        machine.check_solution(&solution);
+        machine.check_solution(solution);
     }
 
     let solution: u32 = solutions.iter().map(|s| s.iter().sum::<u32>()).sum();
-    println!("{solution}");
+    Ok(solution)
 }
 
 // [.####] (0,1,4) (0,1,2) (0,1,2,4) (1,2,3) {26,38,36,12,22}
@@ -91,17 +92,15 @@ impl Machine {
                 }
             }
 
-            if lights == self.target_lights {
-                if combination.count_ones() < min_presses {
-                    min_presses = combination.count_ones();
-                }
+            if lights == self.target_lights && combination.count_ones() < min_presses {
+                min_presses = combination.count_ones();
             }
         }
 
         min_presses
     }
 
-    fn push_button(lights: &mut Vec<bool>, button: &Button) {
+    fn push_button(lights: &mut [bool], button: &Button) {
         for &toggle in &button.toggles {
             lights[toggle] = !lights[toggle];
         }

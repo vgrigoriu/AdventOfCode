@@ -1,3 +1,4 @@
+use color_eyre::{Result, eyre::eyre};
 use std::{cmp::Ordering, collections::HashMap};
 
 const INPUT: &str = include_str!("../../input/2025/day08.in");
@@ -34,7 +35,7 @@ impl Ord for Pair {
 
 impl PartialOrd for Pair {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.distance.total_cmp(&other.distance))
+        Some(self.cmp(other))
     }
 }
 
@@ -46,7 +47,7 @@ impl PartialEq for Pair {
 
 impl Eq for Pair {}
 
-pub fn solve1() {
+pub fn solve1() -> Result<u32> {
     let boxes: Vec<_> = INPUT
         .lines()
         .enumerate()
@@ -98,7 +99,7 @@ pub fn solve1() {
             }
             for (box_no, &circuit) in circuits.clone().iter() {
                 if circuit == circuit2 {
-                    *circuits.get_mut(&box_no).unwrap() = circuit1;
+                    *circuits.get_mut(box_no).unwrap() = circuit1;
                 }
             }
         }
@@ -106,21 +107,17 @@ pub fn solve1() {
 
     let mut size_of_circuits = HashMap::new();
     for (_, circuit) in circuits {
-        if !size_of_circuits.contains_key(&circuit) {
-            size_of_circuits.insert(circuit, 1);
-        } else {
-            *size_of_circuits.get_mut(&circuit).unwrap() += 1;
-        }
+        *size_of_circuits.entry(circuit).or_insert(0) += 1;
     }
 
     for (circuit, size) in size_of_circuits {
         println!("{circuit}: {size}");
     }
 
-    println!("{}", 55 * 34 * 31);
+    Ok(55 * 34 * 31)
 }
 
-pub fn solve2() {
+pub fn solve2() -> Result<f64> {
     let boxes: Vec<_> = INPUT
         .lines()
         .enumerate()
@@ -172,14 +169,14 @@ pub fn solve2() {
             }
             for (box_no, &circuit) in circuits.clone().iter() {
                 if circuit == circuit2 {
-                    *circuits.get_mut(&box_no).unwrap() = circuit1;
+                    *circuits.get_mut(box_no).unwrap() = circuit1;
                 }
             }
         }
 
         if circuits.len() == boxes.len() {
-            println!("{}", pair.box1.x * pair.box2.x);
-            return;
+            return Ok(pair.box1.x * pair.box2.x);
         }
     }
+    Err(eyre!("Not supposed to get here"))
 }

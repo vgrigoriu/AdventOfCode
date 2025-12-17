@@ -1,5 +1,8 @@
 use color_eyre::{Result, eyre::eyre};
-use std::{collections::{HashMap, HashSet, VecDeque}, str::FromStr};
+use std::{
+    collections::{HashMap, HashSet, VecDeque},
+    str::FromStr,
+};
 
 const INPUT: &str = include_str!("../../input/2025/day11.in");
 
@@ -19,7 +22,7 @@ pub fn solve1() -> Result<usize> {
 
 pub fn solve2() -> Result<usize> {
     let devices: Result<Vec<_>, _> = INPUT.lines().map(|l| l.parse::<Device>()).collect();
-    let links: HashMap<_, _> = devices?.into_iter().map(|d|(d.name, d.outputs)).collect();
+    let links: HashMap<_, _> = devices?.into_iter().map(|d| (d.name, d.outputs)).collect();
 
     let svr_to_fft = find_paths(&links, "svr", "fft");
 
@@ -43,7 +46,7 @@ fn find_paths(links: &HashMap<String, Vec<String>>, from: &str, to: &str) -> usi
                 println!("\t{node} outputs to {to}");
                 result += 1;
             } else {
-                to_visit.push_back(&link);
+                to_visit.push_back(link);
             }
             visited.insert((node, link));
         }
