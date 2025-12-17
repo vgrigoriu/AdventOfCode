@@ -37,7 +37,7 @@ macro_rules! aoc {
     };
     ($year:literal, $day:tt) => {
         ::paste::paste! {
-            use aoc2025::[<year $year>]::[<day $day>] as solution;
+            use aoc::[<year $year>]::[<day $day>] as solution;
             println!("{}", solution::solve1()?);
             println!("{}", solution::solve2()?);
         }

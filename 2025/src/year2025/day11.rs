@@ -1,4 +1,4 @@
-use color_eyre::eyre::{Result, eyre};
+use color_eyre::{Result, eyre::eyre};
 use std::{collections::{HashMap, HashSet, VecDeque}, str::FromStr};
 
 const INPUT: &str = include_str!("../../input/2025/day11.in");

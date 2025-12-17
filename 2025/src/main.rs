@@ -1,4 +1,4 @@
-use aoc2025::aoc;
+use aoc::aoc;
 use color_eyre::eyre::Result;
 
 fn main() -> Result<()> {
