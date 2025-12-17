@@ -2,7 +2,7 @@ use std::cmp::min;
 
 use crate::utilities::parse_grid;
 
-const INPUT: &str = include_str!("../../input/day04.in");
+const INPUT: &str = include_str!("../../input/2025/day04.in");
 
 pub fn solve1() {
     let grid = parse_grid(INPUT);

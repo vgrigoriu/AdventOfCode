@@ -1,6 +1,6 @@
 use crate::dial::Dial;
 
-const INPUT: &str = include_str!("../../input/day01.in");
+const INPUT: &str = include_str!("../../input/2025/day01.in");
 
 pub fn solve1() {
     let mut dial = Dial::new();

@@ -1,6 +1,6 @@
 use crate::utilities::{map_grid, parse_grid};
 
-const INPUT: &str = include_str!("../../input/day07.in");
+const INPUT: &str = include_str!("../../input/2025/day07.in");
 
 pub fn solve1() {
     let mut manifold = parse_grid(INPUT);

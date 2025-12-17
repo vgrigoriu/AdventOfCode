@@ -3,7 +3,7 @@ use std::{
     ops::RangeInclusive,
 };
 
-const INPUT: &str = include_str!("../../input/day05.in");
+const INPUT: &str = include_str!("../../input/2025/day05.in");
 
 pub fn solve1() {
     let ranges: Vec<RangeInclusive<u64>> = INPUT

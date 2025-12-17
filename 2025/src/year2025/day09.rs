@@ -1,7 +1,7 @@
 use crate::tile::Tile;
 use itertools::Itertools;
 
-const INPUT: &str = include_str!("../../input/day09.in");
+const INPUT: &str = include_str!("../../input/2025/day09.in");
 
 pub fn solve1() {
     let tiles = parse_tiles();

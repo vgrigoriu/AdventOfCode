@@ -1,4 +1,4 @@
-const INPUT: &str = include_str!("../../input/day03.in");
+const INPUT: &str = include_str!("../../input/2025/day03.in");
 
 pub fn solve1() {
     println!("{}", solve(2));

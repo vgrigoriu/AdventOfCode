@@ -1,6 +1,6 @@
 use crate::utilities::parse_grid;
 
-const INPUT: &str = include_str!("../../input/day06.in");
+const INPUT: &str = include_str!("../../input/2025/day06.in");
 
 pub fn solve1() {
     let lines: Vec<&str> = INPUT.lines().collect();
