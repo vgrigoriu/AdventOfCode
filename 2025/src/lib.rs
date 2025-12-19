@@ -1,3 +1,4 @@
+pub mod dag;
 pub mod dial;
 pub mod solver;
 pub mod tile;
