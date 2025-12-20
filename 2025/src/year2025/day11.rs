@@ -38,7 +38,7 @@ impl<'a> PathsFinder<'a> {
         //     - add paths[node] to paths[neighbor]
         //     - if incoming edges is 0, add neighbor to queue
 
-        let mut incoming_edges = self.dag.incoming_edges();
+        let mut incoming_edges = self.dag.in_degrees();
         // Start by visiting root nodes.
         let mut to_visit: VecDeque<_> = incoming_edges
             .keys()
@@ -46,7 +46,7 @@ impl<'a> PathsFinder<'a> {
             .copied()
             .collect();
 
-        // if first node is not a root node, walk from the first root until it
+        // if the first node is not a root node, walk from the first root until we find it
         // to remove incoming edges, and ignore the result.
         if !to_visit.contains(&nodes[0]) {
             let _ = self.walk(to_visit[0], nodes[0], &mut incoming_edges, &mut to_visit);
@@ -90,5 +90,49 @@ impl<'a> PathsFinder<'a> {
         }
 
         paths[to]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn single_path() -> Result<()> {
+        let dag = DAG::parse(
+            r"a: b
+b: c",
+        )?;
+        let finder = PathsFinder::new(dag);
+        assert_eq!(finder.find_paths(&["a", "c"]), 1);
+        Ok(())
+    }
+
+    #[test]
+    fn diamond_has_two_paths() -> Result<()> {
+        let dag = DAG::parse(
+            r"a: b c
+b: d
+c: d",
+        )?;
+        let finder = PathsFinder::new(dag);
+        assert_eq!(finder.find_paths(&["a", "d"]), 2);
+        Ok(())
+    }
+
+    #[test]
+    fn waypoint_multiplies_paths() -> Result<()> {
+        let dag = DAG::parse(
+            r"a: b1 b2
+b1: c
+b2: c
+c: d1 d2
+d1: e
+d2: e",
+        )?;
+        let finder = PathsFinder::new(dag);
+        // a->c has 2 paths, c->e has 2 paths, total = 4
+        assert_eq!(finder.find_paths(&["a", "c", "e"]), 4);
+        Ok(())
     }
 }

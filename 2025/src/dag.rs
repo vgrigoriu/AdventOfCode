@@ -1,24 +1,23 @@
 use color_eyre::{Result, eyre::eyre};
 use std::collections::{HashMap, HashSet};
 
+/// A directed graph parsed from adjacency list format.
+///
+/// Note: Does not verify acyclicity despite the name.
+///
+/// Input format:
+/// ```text
+/// node1: neighbor1 neighbor2
+/// node2: neighbor3
+/// ```
 pub struct DAG<'a> {
     nodes: HashSet<&'a str>,
     edges: HashMap<&'a str, Vec<&'a str>>,
 }
 
 impl<'a> DAG<'a> {
+    /// Parses a string into a DAG. Does not detect cycles.
     pub fn parse(s: &'a str) -> Result<Self> {
-        // e.g.:
-        // aaa: you hhh
-        // you: bbb ccc
-        // bbb: ddd eee
-        // ccc: ddd eee fff
-        // ddd: ggg
-        // eee: out
-        // fff: out
-        // ggg: out
-        // hhh: ccc fff iii
-        // iii: out
         let lines: Vec<_> = s
             .lines()
             .map(|l| l.split_once(": ").ok_or(eyre!("Line has no ': ': {l}")))
@@ -38,24 +37,22 @@ impl<'a> DAG<'a> {
         Ok(Self { edges, nodes })
     }
 
-    pub fn no_of_nodes(&self) -> usize {
-        // Not strictly correct, there might be nodes with no outgoing edges,
-        // which won't appear as keys in the `edges` hashmap.
+    pub fn node_count(&self) -> usize {
         self.nodes.len()
     }
 
-    pub fn neighbors(&self, node: &str) -> &Vec<&'a str> {
-        &self.edges[node]
+    pub fn neighbors(&self, node: &str) -> &[&'a str] {
+        self.edges.get(node).map(|n| n.as_slice()).unwrap_or(&[])
     }
 
-    pub fn incoming_edges(&self) -> HashMap<&'a str, usize> {
-        let mut incoming_edges: HashMap<_, _> = self.nodes.iter().map(|&n| (n, 0)).collect();
+    pub fn in_degrees(&self) -> HashMap<&'a str, usize> {
+        let mut in_degrees: HashMap<_, _> = self.nodes.iter().map(|&n| (n, 0)).collect();
         for neighbors in self.edges.values() {
             for &neighbor in neighbors {
-                *incoming_edges.entry(neighbor).or_default() += 1;
+                *in_degrees.get_mut(neighbor).unwrap() += 1;
             }
         }
-        incoming_edges
+        in_degrees
     }
 }
 
@@ -84,37 +81,42 @@ b: c",
     }
 
     #[test]
-    fn no_of_edges_is_correct() -> Result<()> {
+    fn parse_fails_on_invalid_input() {
+        assert!(DAG::parse("invalid line without colon").is_err());
+    }
+
+    #[test]
+    fn node_count_is_correct() -> Result<()> {
         let dag = DAG::parse(
             r"a: b
 c: d",
         )?;
-        assert_eq!(dag.no_of_nodes(), 4);
+        assert_eq!(dag.node_count(), 4);
 
         let dag = DAG::parse(
             r"a: b
 c: b",
         )?;
-        assert_eq!(dag.no_of_nodes(), 3);
+        assert_eq!(dag.node_count(), 3);
 
         let dag = DAG::parse(
             r"a: b
 b: c",
         )?;
-        assert_eq!(dag.no_of_nodes(), 3);
+        assert_eq!(dag.node_count(), 3);
 
         let dag = DAG::parse(
             r"a: b c d
 b: c
 c: d e f",
         )?;
-        assert_eq!(dag.no_of_nodes(), 6);
+        assert_eq!(dag.node_count(), 6);
         Ok(())
     }
 
     #[test]
-    fn test_incoming_edges() -> Result<()> {
-        let edges = DAG::parse(
+    fn test_in_degrees() -> Result<()> {
+        let in_degrees = DAG::parse(
             r"aaa: you hhh
 you: bbb ccc
 bbb: ddd eee
@@ -126,20 +128,20 @@ ggg: out
 hhh: ccc fff iii
 iii: out",
         )?
-        .incoming_edges();
+        .in_degrees();
 
-        assert_eq!(edges["you"], 1);
-        assert_eq!(edges["aaa"], 0);
-        assert_eq!(edges["bbb"], 1);
-        assert_eq!(edges["ccc"], 2);
-        assert_eq!(edges["ddd"], 2);
-        assert_eq!(edges["eee"], 2);
-        assert_eq!(edges["fff"], 2);
-        assert_eq!(edges["ggg"], 1);
-        assert_eq!(edges["hhh"], 1);
-        assert_eq!(edges["out"], 4);
+        assert_eq!(in_degrees["you"], 1);
+        assert_eq!(in_degrees["aaa"], 0);
+        assert_eq!(in_degrees["bbb"], 1);
+        assert_eq!(in_degrees["ccc"], 2);
+        assert_eq!(in_degrees["ddd"], 2);
+        assert_eq!(in_degrees["eee"], 2);
+        assert_eq!(in_degrees["fff"], 2);
+        assert_eq!(in_degrees["ggg"], 1);
+        assert_eq!(in_degrees["hhh"], 1);
+        assert_eq!(in_degrees["out"], 4);
 
-        let edges = DAG::parse(
+        let in_degrees = DAG::parse(
             r"svr: aaa bbb
 aaa: fft
 fft: ccc
@@ -154,23 +156,32 @@ fff: ggg hhh
 ggg: out
 hhh: out",
         )?
-        .incoming_edges();
+        .in_degrees();
 
-        assert_eq!(edges["svr"], 0);
-        assert_eq!(edges["aaa"], 1);
-        assert_eq!(edges["bbb"], 1);
-        assert_eq!(edges["ccc"], 2);
-        assert_eq!(edges["ddd"], 1);
-        assert_eq!(edges["eee"], 1);
-        assert_eq!(edges["fff"], 2);
-        assert_eq!(edges["ggg"], 1);
-        assert_eq!(edges["hhh"], 1);
-        assert_eq!(edges["fft"], 1);
-        assert_eq!(edges["tty"], 1);
-        assert_eq!(edges["hub"], 1);
-        assert_eq!(edges["dac"], 1);
-        assert_eq!(edges["out"], 2);
+        assert_eq!(in_degrees["svr"], 0);
+        assert_eq!(in_degrees["aaa"], 1);
+        assert_eq!(in_degrees["bbb"], 1);
+        assert_eq!(in_degrees["ccc"], 2);
+        assert_eq!(in_degrees["ddd"], 1);
+        assert_eq!(in_degrees["eee"], 1);
+        assert_eq!(in_degrees["fff"], 2);
+        assert_eq!(in_degrees["ggg"], 1);
+        assert_eq!(in_degrees["hhh"], 1);
+        assert_eq!(in_degrees["fft"], 1);
+        assert_eq!(in_degrees["tty"], 1);
+        assert_eq!(in_degrees["hub"], 1);
+        assert_eq!(in_degrees["dac"], 1);
+        assert_eq!(in_degrees["out"], 2);
 
+        Ok(())
+    }
+
+    #[test]
+    fn neighbors_returns_correct_values() -> Result<()> {
+        let dag = DAG::parse("a: b c\nb: d")?;
+        assert_eq!(dag.neighbors("a"), &["b", "c"]);
+        assert_eq!(dag.neighbors("b"), &["d"]);
+        assert_eq!(dag.neighbors("c"), &[] as &[&str]);
         Ok(())
     }
 }
