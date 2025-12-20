@@ -44,7 +44,7 @@ impl<'a> DAG<'a> {
         self.nodes.len()
     }
 
-    pub fn meighbors(&self, node: &str) -> &Vec<&'a str> {
+    pub fn neighbors(&self, node: &str) -> &Vec<&'a str> {
         &self.edges[node]
     }
 

@@ -1,129 +1,94 @@
 use crate::dag::DAG;
 use color_eyre::Result;
+use itertools::Itertools;
 use std::collections::{HashMap, VecDeque};
 
 const INPUT: &str = include_str!("../../input/2025/day11.in");
 
 pub fn solve1() -> Result<usize> {
-    // Approach:
-    // - compute number of incoming edges for every node
-    // - set paths["svr"] = 1 (one way to reach start)
-    // - process nodes in topological order:
-    //   - add start node to a queue
-    //   - while queue not empty:
-    //     - pull node from queue
-    //     - decrement incoming edges of neighbors
-    //     - add paths[node] to paths[neighbor]
-    //     - if incoming edges is 0, add neighbor to queue
-
-    let graph = DAG::parse(INPUT)?;
-    let mut incoming_edges = graph.incoming_edges();
-    let mut to_visit: VecDeque<_> = incoming_edges.keys().filter(|&node|incoming_edges[node] == 0).copied().collect();
-
-    // walk until `you`
-    while let Some(node) = to_visit.pop_front() {
-        if node == "you" {
-            break;
-        }
-        for &neighbor in graph.meighbors(node) {
-            let incoming_edges_entry = incoming_edges.entry(neighbor).or_default();
-            *incoming_edges_entry -= 1;
-            if *incoming_edges_entry == 0 {
-                to_visit.push_back(neighbor);
-            }
-        }
-    }
-    let mut paths = HashMap::new();
-    paths.insert("you", 1);
-    //to_visit = VecDeque::new();
-    to_visit.push_back("you");
-
-    // walk until `out`
-    while let Some(node) = to_visit.pop_front() {
-        if node == "out" {
-            break;
-        }
-        for &neighbor in graph.meighbors(node) {
-            let incoming_edges_entry = incoming_edges.entry(neighbor).or_default();
-            *incoming_edges_entry -= 1;
-            *paths.entry(neighbor).or_default() += *paths.entry(node).or_default();
-            if *incoming_edges_entry == 0 {
-                to_visit.push_back(neighbor);
-            }
-        }
-    }
-    Ok(paths["out"])
+    let path_finder = PathsFinder::new(DAG::parse(INPUT)?);
+    let result = path_finder.find_paths(&["you", "out"]);
+    Ok(result)
 }
 
 pub fn solve2() -> Result<usize> {
-    let graph = DAG::parse(INPUT)?;
-    let mut incoming_edges = graph.incoming_edges();
-    let mut to_visit: VecDeque<_> = incoming_edges.keys().filter(|&node|incoming_edges[node] == 0).copied().collect();
+    let path_finder = PathsFinder::new(DAG::parse(INPUT)?);
+    let result = path_finder.find_paths(&["svr", "fft", "dac", "out"]);
+    Ok(result)
+}
 
-    // count paths from `svr` to `fft`
-    let mut paths = HashMap::new();
-    paths.insert("svr", 1);
+struct PathsFinder<'a> {
+    dag: DAG<'a>,
+}
 
-    // walk until `fft`
-    while let Some(node) = to_visit.pop_front() {
-        if node == "fft" {
-            break;
+impl<'a> PathsFinder<'a> {
+    pub fn new(dag: DAG<'a>) -> Self {
+        Self { dag }
+    }
+
+    pub fn find_paths(&self, nodes: &[&str]) -> usize {
+        // Approach:
+        // - compute number of incoming edges for every node
+        // - set paths[start node] = 1 (one way to reach start)
+        // - process nodes in topological order:
+        //   - add start node to a queue
+        //   - while queue not empty:
+        //     - pull node from queue
+        //     - decrement incoming edges of neighbors
+        //     - add paths[node] to paths[neighbor]
+        //     - if incoming edges is 0, add neighbor to queue
+
+        let mut incoming_edges = self.dag.incoming_edges();
+        // Start by visiting root nodes.
+        let mut to_visit: VecDeque<_> = incoming_edges
+            .keys()
+            .filter(|&node| incoming_edges[node] == 0)
+            .copied()
+            .collect();
+
+        // if first node is not a root node, walk from the first root until it
+        // to remove incoming edges, and ignore the result.
+        if !to_visit.contains(&nodes[0]) {
+            let _ = self.walk(to_visit[0], nodes[0], &mut incoming_edges, &mut to_visit);
         }
-        for &neighbor in graph.meighbors(node) {
-            let incoming_edges_entry = incoming_edges.entry(neighbor).or_default();
-            *incoming_edges_entry -= 1;
-            *paths.entry(neighbor).or_default() += *paths.entry(node).or_default();
-            if *incoming_edges_entry == 0 {
-                to_visit.push_back(neighbor);
+
+        let mut result = 1;
+        for (node1, node2) in nodes.iter().tuple_windows() {
+            result *= self.walk(node1, node2, &mut incoming_edges, &mut to_visit);
+        }
+
+        result
+    }
+
+    fn walk(
+        &self,
+        from: &'a str,
+        to: &str,
+        incoming_edges: &mut HashMap<&'a str, usize>,
+        to_visit: &mut VecDeque<&'a str>,
+    ) -> usize {
+        let mut paths = HashMap::new();
+        paths.insert(from, 1);
+
+        if !to_visit.contains(&from) {
+            to_visit.push_back(from);
+        }
+
+        // walk until `to`
+        while let Some(node) = to_visit.pop_front() {
+            if node == to {
+                break;
+            }
+            for &neighbor in self.dag.neighbors(node) {
+                let incoming_edges_entry = incoming_edges.entry(neighbor).or_default();
+                *incoming_edges_entry -= 1;
+                *paths.entry(neighbor).or_default() += *paths.entry(node).or_default();
+                if *incoming_edges_entry == 0 {
+                    to_visit.push_back(neighbor);
+                }
             }
         }
+
+        paths[to]
     }
-    let paths_svr_to_fft = paths["fft"];
-
-    // count paths from `fft` to `dac`
-    paths.clear();
-    paths.insert("fft", 1);
-    to_visit.push_back("fft");
-
-    // walk until `dac`
-    while let Some(node) = to_visit.pop_front() {
-        if node == "dac" {
-            break;
-        }
-        for &neighbor in graph.meighbors(node) {
-            let incoming_edges_entry = incoming_edges.entry(neighbor).or_default();
-            *incoming_edges_entry -= 1;
-            *paths.entry(neighbor).or_default() += *paths.entry(node).or_default();
-            if *incoming_edges_entry == 0 {
-                to_visit.push_back(neighbor);
-            }
-        }
-    }
-    let paths_fft_to_dac = paths["dac"];
-
-    // count paths from `dac` to `out`
-    paths.clear();
-    paths.insert("dac", 1);
-    to_visit.push_back("dac");
-
-    // walk until `out`
-    while let Some(node) = to_visit.pop_front() {
-        if node == "out" {
-            break;
-        }
-        for &neighbor in graph.meighbors(node) {
-            let incoming_edges_entry = incoming_edges.entry(neighbor).or_default();
-            *incoming_edges_entry -= 1;
-            *paths.entry(neighbor).or_default() += *paths.entry(node).or_default();
-            if *incoming_edges_entry == 0 {
-                to_visit.push_back(neighbor);
-            }
-        }
-    }
-    let paths_dac_to_out = paths["out"];
-
-    dbg!(paths_svr_to_fft);
-    dbg!(paths_fft_to_dac);
-    dbg!(paths_dac_to_out);
-    Ok(paths_svr_to_fft * paths_fft_to_dac * paths_dac_to_out)
 }
