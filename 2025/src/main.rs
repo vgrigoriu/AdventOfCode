@@ -3,6 +3,6 @@ use color_eyre::eyre::Result;
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    aoc!(2025, 11);
+    aoc!(2015, 18);
     Ok(())
 }
