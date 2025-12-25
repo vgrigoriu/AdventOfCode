@@ -1,19 +1,24 @@
 use std::str::FromStr;
 
-use color_eyre::{Report, Result, eyre::{Context, OptionExt}};
+use color_eyre::{
+    Report, Result,
+    eyre::{Context, OptionExt},
+};
 
 const INPUT: &str = include_str!("../../input/2025/day12.in");
 
 pub fn solve1() -> Result<usize> {
-    let lines = INPUT
-        .lines()
-        .collect::<Vec<_>>();
+    let lines = INPUT.lines().collect::<Vec<_>>();
 
     let regions = lines
         .split(|&l| l.is_empty())
-        .next_back().ok_or_eyre("invalid input")?;
+        .next_back()
+        .ok_or_eyre("invalid input")?;
 
-    let regions: Vec<_> = regions.iter().map(|l|l.parse::<Region>()).collect::<Result<_>>()?;
+    let regions: Vec<_> = regions
+        .iter()
+        .map(|l| l.parse::<Region>())
+        .collect::<Result<_>>()?;
 
     let shape_tiles = vec![7, 7, 5, 6, 7, 7];
     let fitting_regions: Vec<_> = regions.iter().filter(|&r| r.fits(&shape_tiles)).collect();
@@ -34,7 +39,12 @@ struct Region {
 
 impl Region {
     fn fits(&self, shape_tiles: &[u16]) -> bool {
-        self.shape_counts.iter().zip(shape_tiles).map(|(&a, &b)| a * b).sum::<u16>() < self.width * self.length
+        self.shape_counts
+            .iter()
+            .zip(shape_tiles)
+            .map(|(&a, &b)| a * b)
+            .sum::<u16>()
+            < self.width * self.length
     }
 }
 
@@ -50,6 +60,10 @@ impl FromStr for Region {
             .map(|c| c.parse().wrap_err("invalid shape count"))
             .collect::<Result<_>>()?;
 
-        Ok(Self { width: width.parse()?, length: length.parse()?, shape_counts })
+        Ok(Self {
+            width: width.parse()?,
+            length: length.parse()?,
+            shape_counts,
+        })
     }
 }
