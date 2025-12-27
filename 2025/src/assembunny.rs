@@ -1,5 +1,6 @@
 use color_eyre::Report;
 use color_eyre::Result as EyreResult;
+use color_eyre::eyre::Context;
 use color_eyre::eyre::OptionExt;
 use color_eyre::eyre::eyre;
 use std::fmt::Debug;
@@ -49,7 +50,7 @@ impl FromStr for Value {
     type Err = Report;
 
     fn from_str(s: &str) -> EyreResult<Self> {
-        Ok(Value(s.parse()?))
+        Ok(Value(s.parse().wrap_err_with(||format!("can't parse number from {s}"))?))
     }
 }
 
@@ -88,7 +89,33 @@ enum Instruction {
     Cpy { arg: Arg, r: Register },
     Inc { r: Register },
     Dec { r: Register },
-    Jnz { arg: Arg, jump: Value },
+    Jnz { cmp: Arg, jump: Arg },
+    Tgl { arg: Arg },
+    Noop,
+}
+
+impl Instruction {
+    fn toggle(&mut self) {
+        *self = match self {
+            Instruction::Cpy { arg, r } => {
+                Instruction::Jnz { cmp: *arg, jump: Arg::Register(*r) }
+            }
+            Instruction::Inc { r } => {
+                Instruction::Dec { r: *r }
+            }
+            Instruction::Dec { r } => {
+                Instruction::Inc { r: *r }
+            }
+            Instruction::Jnz { cmp, jump: Arg::Register(r) } => {
+                Instruction::Cpy { arg: *cmp, r: *r }
+            }
+            Instruction::Tgl { arg: Arg::Register(r) } => {
+                Instruction::Inc { r: *r }
+            }
+            // All other combinations are invalid.
+            _ => Instruction::Noop
+        }
+    }
 }
 
 impl FromStr for Instruction {
@@ -101,11 +128,11 @@ impl FromStr for Instruction {
         // dec c
         match &s[..3] {
             "jnz" => {
-                let (arg, jump) = &s[4..]
+                let (cmp, jump) = &s[4..]
                     .split_once(" ")
                     .ok_or_eyre("Expected two arguments")?;
                 Ok(Instruction::Jnz {
-                    arg: arg.parse()?,
+                    cmp: cmp.parse().unwrap(),
                     jump: jump.parse()?,
                 })
             }
@@ -114,8 +141,8 @@ impl FromStr for Instruction {
                     .split_once(" ")
                     .ok_or_eyre("Expected two arguments")?;
                 Ok(Instruction::Cpy {
-                    arg: arg.parse()?,
-                    r: r.parse()?,
+                    arg: arg.parse().unwrap(),
+                    r: r.parse().unwrap(),
                 })
             }
             "inc" => {
@@ -126,6 +153,10 @@ impl FromStr for Instruction {
                 let r = &s[4..];
                 Ok(Instruction::Dec { r: r.parse()? })
             }
+            "tgl" => {
+                let arg = &s[4..];
+                Ok(Instruction::Tgl { arg: arg.parse()? })
+            }
             _ => Err(eyre!("Unexpected instruction: {s}")),
         }
     }
@@ -135,20 +166,24 @@ impl Debug for Instruction {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             Instruction::Cpy { arg, r } => {
-                write!(f, "cpy {:?} {:?}", arg, r)?;
+                write!(f, "cpy {:?} {:?}", arg, r)
             }
             Instruction::Inc { r } => {
-                write!(f, "inc {:?}", r)?;
+                write!(f, "inc {:?}", r)
             }
             Instruction::Dec { r } => {
-                write!(f, "dec {:?}", r)?;
+                write!(f, "dec {:?}", r)
             }
-            Instruction::Jnz { arg, jump } => {
-                write!(f, "jnz {:?} {:?}", arg, jump)?;
+            Instruction::Jnz { cmp, jump } => {
+                write!(f, "jnz {:?} {:?}", cmp, jump)
             }
-        };
-
-        Ok(())
+            Instruction::Tgl { arg } => {
+                write!(f, "tgl {:?}", arg)
+            }
+            Instruction::Noop => {
+                write!(f, "noop")
+            }
+        }
     }
 }
 
@@ -162,7 +197,7 @@ impl FromStr for Program {
     fn from_str(s: &str) -> EyreResult<Self> {
         let instructions = s
             .lines()
-            .map(|l| l.parse::<Instruction>())
+            .map(|l| l.parse::<Instruction>().wrap_err_with(|| format!("error parsing {l}")))
             .collect::<EyreResult<_>>()?;
 
         Ok(Program { instructions })
@@ -185,7 +220,7 @@ impl Computer {
             b: Value(b),
             c: Value(c),
             d: Value(d),
-            program: program.parse().unwrap(),
+            program: program.parse().expect("error parsing program"),
             ip: 0,
         }
     }
@@ -216,12 +251,28 @@ impl Computer {
                 self.set(*r, Value(self.value(Arg::Register(*r)).0 - 1));
                 self.ip += 1;
             }
-            Instruction::Jnz { arg, jump } => {
-                if self.value(*arg).0 != 0 {
+            Instruction::Jnz { cmp, jump } => {
+                if self.value(*cmp).0 != 0 {
+                    let jump = self.value(*jump);
                     self.ip = (self.ip as i64 + jump.0) as usize;
                 } else {
                     self.ip += 1;
                 }
+            }
+            Instruction::Tgl { arg } => {
+                let jump = self.value(*arg);
+                let ip_to_change = self.ip as i64 + jump.0;
+                if ip_to_change < 0 || self.program.instructions.len() as i64 <= ip_to_change {
+                    // nothing happens
+                    self.ip += 1;
+                    return;
+                }
+                let ip_to_change = ip_to_change as usize;
+                self.program.instructions[ip_to_change].toggle();
+                self.ip += 1;
+            }
+            Instruction::Noop => {
+                self.ip += 1;
             }
         }
     }
