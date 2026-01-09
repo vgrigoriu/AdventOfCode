@@ -6,6 +6,7 @@ pub mod tile;
 pub mod utilities;
 pub mod year2015;
 pub mod year2016;
+pub mod year2023;
 pub mod year2025;
 
 #[macro_export]

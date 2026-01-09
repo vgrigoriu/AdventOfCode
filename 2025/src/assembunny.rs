@@ -50,7 +50,9 @@ impl FromStr for Value {
     type Err = Report;
 
     fn from_str(s: &str) -> EyreResult<Self> {
-        Ok(Value(s.parse().wrap_err_with(||format!("can't parse number from {s}"))?))
+        Ok(Value(s.parse().wrap_err_with(|| {
+            format!("can't parse number from {s}")
+        })?))
     }
 }
 
@@ -97,23 +99,21 @@ enum Instruction {
 impl Instruction {
     fn toggle(&mut self) {
         *self = match self {
-            Instruction::Cpy { arg, r } => {
-                Instruction::Jnz { cmp: *arg, jump: Arg::Register(*r) }
-            }
-            Instruction::Inc { r } => {
-                Instruction::Dec { r: *r }
-            }
-            Instruction::Dec { r } => {
-                Instruction::Inc { r: *r }
-            }
-            Instruction::Jnz { cmp, jump: Arg::Register(r) } => {
-                Instruction::Cpy { arg: *cmp, r: *r }
-            }
-            Instruction::Tgl { arg: Arg::Register(r) } => {
-                Instruction::Inc { r: *r }
-            }
+            Instruction::Cpy { arg, r } => Instruction::Jnz {
+                cmp: *arg,
+                jump: Arg::Register(*r),
+            },
+            Instruction::Inc { r } => Instruction::Dec { r: *r },
+            Instruction::Dec { r } => Instruction::Inc { r: *r },
+            Instruction::Jnz {
+                cmp,
+                jump: Arg::Register(r),
+            } => Instruction::Cpy { arg: *cmp, r: *r },
+            Instruction::Tgl {
+                arg: Arg::Register(r),
+            } => Instruction::Inc { r: *r },
             // All other combinations are invalid.
-            _ => Instruction::Noop
+            _ => Instruction::Noop,
         }
     }
 }
@@ -197,7 +197,10 @@ impl FromStr for Program {
     fn from_str(s: &str) -> EyreResult<Self> {
         let instructions = s
             .lines()
-            .map(|l| l.parse::<Instruction>().wrap_err_with(|| format!("error parsing {l}")))
+            .map(|l| {
+                l.parse::<Instruction>()
+                    .wrap_err_with(|| format!("error parsing {l}"))
+            })
             .collect::<EyreResult<_>>()?;
 
         Ok(Program { instructions })
