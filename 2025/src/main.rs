@@ -1,8 +1,8 @@
+use anyhow::Result;
 use aoc::aoc;
-use color_eyre::eyre::Result;
 
 fn main() -> Result<()> {
-    aoc!(2023, 5);
+    aoc!(2020, 2);
 
     Ok(())
 }
